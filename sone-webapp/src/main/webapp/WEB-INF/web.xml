@@ -114,10 +114,10 @@
         <load-on-startup>4</load-on-startup>
     </servlet>
 
-  <servlet>
-        <servlet-name>RMI</servlet-name>
-        <servlet-class>org.apache.jackrabbit.servlet.remote.RemoteBindingServlet</servlet-class>
-    </servlet>
+  <!-- <servlet> -->
+  <!--       <servlet-name>RMI</servlet-name> -->
+  <!--       <servlet-class>org.apache.jackrabbit.servlet.remote.RemoteBindingServlet</servlet-class> -->
+  <!--   </servlet> -->
 
   <servlet>
         <servlet-name>H2Console</servlet-name>
@@ -150,10 +150,10 @@
         <url-pattern>/repository/*</url-pattern>
     </servlet-mapping>
 
-  <servlet-mapping>
-        <servlet-name>RMI</servlet-name>
-        <url-pattern>/rmi</url-pattern>
-    </servlet-mapping>
+  <!-- <servlet-mapping> -->
+  <!--       <servlet-name>RMI</servlet-name> -->
+  <!--       <url-pattern>/rmi</url-pattern> -->
+  <!--   </servlet-mapping> -->
 
   <servlet-mapping>
         <servlet-name>H2Console</servlet-name>

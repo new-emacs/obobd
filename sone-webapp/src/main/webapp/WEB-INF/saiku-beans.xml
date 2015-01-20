@@ -10,10 +10,10 @@
         </bean>-->
     <bean id="repositoryDsManager" class="org.saiku.service.datasource.RepositoryDatasourceManager" init-method="load" destroy-method="unload">
         <property name="userService" ref="userServiceBean"/>
-        <property name="configurationpath" value="../../repository/configuration.xml"/>
-        <property name="datadir" value="../../repository/data"/>
-        <property name="foodmartdir" value="../../data"/>
-        <property name="foodmartschema" value="../../data/FoodMart4.xml"/>
+        <property name="configurationpath" value="../util/configuration.xml"/>
+        <property name="datadir" value="../util/data"/>
+        <property name="foodmartdir" value="../util/"/>
+        <property name="foodmartschema" value="../util/FoodMart4.xml"/>
         <property name="foodmarturl" value="jdbc:h2:../../data/foodmart;MODE=MySQL"/>
     </bean>
 
