@@ -24,9 +24,14 @@ function do_build(){
     mvn clean package
 }
 
+function do_upgrade(){
+    cp -R ../saiku-ui src/main/webapp/
+    cp ../saiku-webapp/target/saiku-webapp-3.0.10-SNAPSHOT/WEB-INF/*.xml src/main/webapp/WEB-INF/
+}
+
 function do_run(){
     cw kill 8015
-    cp -R ../saiku-ui src/main/webapp/
+
     mvn -o install
     mvn tomcat:run &
 }
@@ -44,8 +49,8 @@ for OPT in $@ ; do
     echo "开始执行： $OPT"
 
     case $OPT in
-        build)
-            do_build
+        upgrade)
+            do_upgrade
             ;;
         run)
             do_run
