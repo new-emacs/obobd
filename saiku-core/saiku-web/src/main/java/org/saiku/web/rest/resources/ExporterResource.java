@@ -325,7 +325,7 @@ public class ExporterResource {
 
 		  if(!type.equals("pdf")) {
 
-			PDDocument document = PDDocument.load(new ByteArrayInputStream(b), null);
+              PDDocument document = PDDocument.load(new ByteArrayInputStream(b), "");
 
 			PDPageTree pdPages = document.getDocumentCatalog().getPages();
 			PDPage page = pdPages.get(0);
