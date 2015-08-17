@@ -18,98 +18,98 @@
 				<plugin>
 					<groupId>com.samaxes.maven</groupId>
 					<artifactId>minify-maven-plugin</artifactId>
-					<version>1.7.4-modify</version>
+					<version>1.7.4</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>com.samaxes.maven</groupId>
-				<artifactId>minify-maven-plugin</artifactId>
-				<version>1.7.4-modify</version>
-				<executions>
-				<execution>
-				<id>default-minify</id>
-				<configuration>
-					<closureExterns>
-						<closureExtern>../externs/backbone_externs.js</closureExtern>
-						<closureExtern>../externs/jquery_externs.js</closureExtern>
-						<closureExtern>../externs/underscore_externs.js</closureExtern>
-					</closureExterns>
-					<closureUseDefaultExterns>true</closureUseDefaultExterns>
-					<closureSortDependencies>false</closureSortDependencies>
-					<jsEngine>CLOSURE</jsEngine>
-					<closureLanguage>ECMASCRIPT5</closureLanguage>
-					<jsFinalFile>saiku.js</jsFinalFile>
-					<webappSourceDir>${basedir}/js/saiku/</webappSourceDir>
-					<jsSourceDir>.</jsSourceDir>
-					<jsSourceIncludes>
-						<jsSourceInclude>models/SaikuOlapQuery.js</jsSourceInclude>
-						<jsSourceInclude>models/DateFilter.js</jsSourceInclude>
-						<jsSourceInclude>render/SaikuRenderer.js</jsSourceInclude>
-						<jsSourceInclude>render/SaikuTableRenderer.js</jsSourceInclude>
-						<jsSourceInclude>render/SaikuChartRenderer.js</jsSourceInclude>
-						<jsSourceInclude>models/Dimension.js</jsSourceInclude>
-						<jsSourceInclude>views/DimensionList.js</jsSourceInclude>
-						<jsSourceInclude>views/Toolbar.js</jsSourceInclude>
-						<jsSourceInclude>views/Upgrade.js</jsSourceInclude>
-						<jsSourceInclude>views/Modal.js</jsSourceInclude>
-						<jsSourceInclude>views/MDXModal.js</jsSourceInclude>
-						<jsSourceInclude>views/SelectionsModal.js</jsSourceInclude>
-						<jsSourceInclude>views/DrillthroughModal.js</jsSourceInclude>
-						<jsSourceInclude>views/DrillAcrossModal.js</jsSourceInclude>
-						<jsSourceInclude>views/PermissionsModal.js</jsSourceInclude>
-						<jsSourceInclude>views/DemoLoginForm.js</jsSourceInclude>
-						<jsSourceInclude>views/LoginForm.js</jsSourceInclude>
-						<jsSourceInclude>views/AboutModal.js</jsSourceInclude>
-						<jsSourceInclude>views/OverwriteModal.js</jsSourceInclude>
-						<jsSourceInclude>views/AddFolderModal.js</jsSourceInclude>
-						<jsSourceInclude>views/FilterModal.js</jsSourceInclude>
-						<jsSourceInclude>views/CustomFilterModal.js</jsSourceInclude>
-						<jsSourceInclude>views/MeasuresModal.js</jsSourceInclude>
-						<jsSourceInclude>views/QueryToolbar.js</jsSourceInclude>
-						<jsSourceInclude>views/WorkspaceToolbar.js</jsSourceInclude>
-						<jsSourceInclude>views/WorkspaceDropZone.js</jsSourceInclude>
-						<jsSourceInclude>views/Table.js</jsSourceInclude>
-						<jsSourceInclude>views/Workspace.js</jsSourceInclude>
-						<jsSourceInclude>views/DeleteRepositoryObject.js</jsSourceInclude>
-						<jsSourceInclude>views/MoveRepositoryObject.js</jsSourceInclude>
-						<jsSourceInclude>views/OpenQuery.js</jsSourceInclude>
-						<jsSourceInclude>views/SaveQuery.js</jsSourceInclude>
-						<jsSourceInclude>views/OpenDialog.js</jsSourceInclude>
-						<jsSourceInclude>views/Tab.js</jsSourceInclude>
-						<jsSourceInclude>views/TabSet.js</jsSourceInclude>
-						<jsSourceInclude>models/Repository.js</jsSourceInclude>
-						<jsSourceInclude>models/Result.js</jsSourceInclude>
-						<jsSourceInclude>models/QueryAction.js</jsSourceInclude>
-						<jsSourceInclude>models/QueryScenario.js</jsSourceInclude>
-						<jsSourceInclude>models/Query.js</jsSourceInclude>
-						<jsSourceInclude>models/Session.js</jsSourceInclude>
-						<jsSourceInclude>views/SessionErrorModal.js</jsSourceInclude>
-						<jsSourceInclude>views/SplashScreen.js</jsSourceInclude>
-						<jsSourceInclude>models/SessionWorkspace.js</jsSourceInclude>
-						<jsSourceInclude>models/Member.js</jsSourceInclude>
-						<jsSourceInclude>models/Plugin.js</jsSourceInclude>
-						<jsSourceInclude>models/Settings.js</jsSourceInclude>
-						<jsSourceInclude>models/License.js</jsSourceInclude>
-						<jsSourceInclude>Saiku.js</jsSourceInclude>
-						<jsSourceInclude>views/DateFilterModal.js</jsSourceInclude>
-						<jsSourceInclude>views/WarningModal.js</jsSourceInclude>
-						<jsSourceInclude>views/TitlesModal.js</jsSourceInclude>
-						<jsSourceInclude>adapters/SaikuServer.js</jsSourceInclude>
-						<jsSourceInclude>routers/QueryRouter.js</jsSourceInclude>
-					</jsSourceIncludes>
-					<jsSourceExcludes>
-						<jsSourceExclude>Settings.js</jsSourceExclude>
-						<jsSourceExclude>**/plugins/**/*.js</jsSourceExclude>
-					</jsSourceExcludes>
-					</configuration>
-					<goals>
-						<goal>minify</goal>
-					</goals>
-				</execution>
-				</executions>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>com.samaxes.maven</groupId>-->
+				<!--<artifactId>minify-maven-plugin</artifactId>-->
+				<!--<version>1.7.4</version>-->
+				<!--<executions>-->
+				<!--<execution>-->
+				<!--<id>default-minify</id>-->
+				<!--<configuration>-->
+					<!--<closureExterns>-->
+						<!--<closureExtern>../externs/backbone_externs.js</closureExtern>-->
+						<!--<closureExtern>../externs/jquery_externs.js</closureExtern>-->
+						<!--<closureExtern>../externs/underscore_externs.js</closureExtern>-->
+					<!--</closureExterns>-->
+					<!--<closureUseDefaultExterns>true</closureUseDefaultExterns>-->
+					<!--<closureSortDependencies>false</closureSortDependencies>-->
+					<!--<jsEngine>CLOSURE</jsEngine>-->
+					<!--<closureLanguage>ECMASCRIPT5</closureLanguage>-->
+					<!--<jsFinalFile>saiku.js</jsFinalFile>-->
+					<!--<webappSourceDir>${basedir}/js/saiku/</webappSourceDir>-->
+					<!--<jsSourceDir>.</jsSourceDir>-->
+					<!--<jsSourceIncludes>-->
+						<!--<jsSourceInclude>models/SaikuOlapQuery.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/DateFilter.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>render/SaikuRenderer.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>render/SaikuTableRenderer.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>render/SaikuChartRenderer.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Dimension.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/DimensionList.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/Toolbar.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/Upgrade.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/Modal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/MDXModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/SelectionsModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/DrillthroughModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/DrillAcrossModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/PermissionsModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/DemoLoginForm.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/LoginForm.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/AboutModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/OverwriteModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/AddFolderModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/FilterModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/CustomFilterModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/MeasuresModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/QueryToolbar.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/WorkspaceToolbar.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/WorkspaceDropZone.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/Table.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/Workspace.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/DeleteRepositoryObject.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/MoveRepositoryObject.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/OpenQuery.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/SaveQuery.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/OpenDialog.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/Tab.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/TabSet.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Repository.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Result.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/QueryAction.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/QueryScenario.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Query.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Session.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/SessionErrorModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/SplashScreen.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/SessionWorkspace.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Member.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Plugin.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/Settings.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>models/License.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>Saiku.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/DateFilterModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/WarningModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>views/TitlesModal.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>adapters/SaikuServer.js</jsSourceInclude>-->
+						<!--<jsSourceInclude>routers/QueryRouter.js</jsSourceInclude>-->
+					<!--</jsSourceIncludes>-->
+					<!--<jsSourceExcludes>-->
+						<!--<jsSourceExclude>Settings.js</jsSourceExclude>-->
+						<!--<jsSourceExclude>**/plugins/**/*.js</jsSourceExclude>-->
+					<!--</jsSourceExcludes>-->
+					<!--</configuration>-->
+					<!--<goals>-->
+						<!--<goal>minify</goal>-->
+					<!--</goals>-->
+				<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.7</version>
@@ -188,7 +188,7 @@
 							<mkdir dir="target/saiku-ui" />
 								<mkdir dir="target/saiku-ui2" />
 
-                                <copy file="target/saiku-ui-${project.version}/saiku.min.js" tofile="target/saiku-ui/saiku.min.js" />
+                                <!--<copy file="target/saiku-ui-${project.version}/saiku.min.js" tofile="target/saiku-ui/saiku.min.js" />-->
 								<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
 								<!--<if>
 								<equals arg1="${build.prod}" arg2="true" />
@@ -210,7 +210,7 @@
 											<include name="js/saiku/render/" />
 										</fileset>
 									</copy>
-									<patch patchfile="minify.patch" failonerror="true" originalfile="target/saiku-ui/index.html" />
+									<!--<patch patchfile="minify.patch" failonerror="true" originalfile="target/saiku-ui/index.html" />-->
 
 									<copy todir="target/saiku-ui2">
 										<fileset dir="${basedir}/">
@@ -244,7 +244,7 @@
 			<plugin>
 			    <groupId>org.codehaus.mojo</groupId>
 			    <artifactId>build-helper-maven-plugin</artifactId>
-			    <version>1.7</version>
+			    <version>1.9.1</version>
 			    <executions>
 			        <execution>
 			            <id>attach-artifacts</id>
