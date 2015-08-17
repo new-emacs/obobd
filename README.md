@@ -7,6 +7,10 @@ SAIKU
 
 mvn clean install -DskipTests
 
+Run saiku/saiku-server/target/dist/saiku-server/start-saiku.sh or start-saiku.bat
+
+open http://localhost:8080 usename/password: admin/admin
+
 
 *Issue Tracker: http://jira.meteorite.bi*
 
