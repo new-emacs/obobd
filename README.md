@@ -2,11 +2,10 @@
 
 SAIKU
 ---------------
-*执行以下命令后访问http://localhost:8080 username/password: admin/admin*
+执行以下命令后访问 http://localhost:8080 username/password: admin/admin
 
-mvn clean install -DskipTests
-
-Run saiku/saiku-server/target/dist/saiku-server/start-saiku.sh or start-saiku.bat
+    mvn clean install -DskipTests
+    ./saiku-server/target/dist/saiku-server/start-saiku.sh 或 start-saiku.bat
 
 
 Help and Support
