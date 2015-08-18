@@ -642,7 +642,7 @@
             <dependency>
                 <groupId>pentaho</groupId>
                 <artifactId>mondrian</artifactId>
-                <version>4.3.0.1-SPARK</version>
+                <version>TRUNK-SNAPSHOT</version>
             </dependency>
             <!-- Spring modules -->
             <dependency>
