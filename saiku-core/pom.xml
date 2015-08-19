@@ -39,13 +39,14 @@
             </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.10.3</version>
                 <configuration>
                     <charset>UTF-8</charset>
                     <docencoding>UTF-8</docencoding>
                     <encoding>UTF-8</encoding>
                     <verbose>false</verbose>
                     <quiet>true</quiet>
+                    <failOnError>false</failOnError>
                 </configuration>
                 <executions>
                     <execution>

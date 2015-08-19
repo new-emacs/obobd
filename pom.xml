@@ -18,7 +18,7 @@
         <module>saiku-ui</module>
         <module>saiku-webapp</module>
         <module>saiku-server</module>
-        <module>saiku-bi-platform-plugin-p5</module>
+        <!-- <module>saiku-bi-platform-plugin-p5</module> -->
 <!--        <module>saiku-web-tests</module>-->
     </modules>
 
@@ -256,6 +256,7 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>com.sun.jersey.jersey-test-framework</groupId>
                 <artifactId>jersey-test-framework-core</artifactId>
