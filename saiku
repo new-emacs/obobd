@@ -18,111 +18,53 @@
 
 
 function usageBuild() {
-cat <<eom
+    cat <<eom
 Usage: saiku build <all | project>
-	Builds all or an individual saiku project
+  Builds all or an individual saiku project
 
-	Example:
-	saiku build all
+  Example:
+  saiku build all
 
-	Others:
-	saiku build < all | ui | server | webapp | bi-platform-plugin >
+  Others:
+  saiku build < all | ui | server | webapp | bi-platform-plugin >
 eom
 }
 
 function usageRun() {
-cat <<eom
+    cat <<eom
 Usage: saiku run <package>
 
 package can be:
 
-	server <start|stop>
+  server <start|stop>
             starts or stops the server, according to the argument
 
-	ui [port] [backend_host] [backend_port]
-			Executes node saiku-ui/server.js [port] [backend_host] [backend_port]
-			Default is:
-				node server.js 8080 dev.analytical-labs.com 80
+  ui [port] [backend_host] [backend_port]
+      Executes node saiku-ui/server.js [port] [backend_host] [backend_port]
+      Default is:
+        node server.js 8080 dev.analytical-labs.com 80
 eom
 }
 
 case $1 in
-	"build")
-		if [[ -z $2 ]]; then
-			usageBuild
-			exit 1
-		fi
-		case $2 in
-			"all")
-				sh buildall.sh
-			;;
-			"ui")
-				cd saiku-ui
-				mvn clean package install:install-file -Dfile=target/saiku-ui-2.2.war  -DgroupId=org.saiku -DartifactId=saiku-ui -Dversion=2.2 -Dpackaging=war
-			;;
-			*)
-				cd saiku-$2
-				mvn clean install
-			;;
-		esac
-	;;
-	"run")
-		if [[ -z $2 ]]; then
-			usageRun
-			exit 1
-		fi
-		case $2 in
-			"server")
-			if ([[ "$3" == 'start' ]]); then
-				echo ""
-				echo "Running Server....."
-				cd saiku-server/target/dist/saiku-server/
-				sh start-saiku.sh
-			else
-				case $3 in
-					"stop")
-						echo ""
-						echo "Stopping Server....."
-						echo ""
-						cd saiku-server/target/dist/saiku-server/
-						sh stop-saiku.sh
-					;;
-					*)
-						usageRun
-					;;
-				esac
-			fi
-			;;
-			"ui")
-				cd saiku-ui
-				if [ ! -d ./node_modules ]; then
-					echo "module 'express' not found in saiku-ui/node_modules"
-					echo "installing express ...."
-					npm install express
-				fi
-				echo "Running UI.... "
-				node server.js $3 $4 $5
-			;;
-			*)
-				echo "-----------------------------------------------------"
-				echo "	 E R R O R : Invalid option: $2"
-				echo "-----------------------------------------------------"
-				echo ""
-				usageRun
-				exit 1
-			;;
-		esac
-		
-	;;
-	*)
-		echo "-----------------------------------------------------"
-		echo "	E R R O R : Invalid option: $1" >&2
-		echo "-----------------------------------------------------"
-		echo ""
-		usageBuild
-		usageRun
-		exit 1
-	;;
+    "build")
+        mvn clean install -DskipTests=true
+        ;;
+    "run")
+        echo ""
+        echo "Running Server....."
+        cd saiku-server/target/dist/saiku-server/
+        sh start-saiku.sh
+        ;;
+    *)
+        echo "-----------------------------------------------------"
+        echo "	E R R O R : Invalid option: $1" >&2
+        echo "-----------------------------------------------------"
+        echo ""
+        usageBuild
+		    usageRun
+		    exit 1
+	      ;;
 
 esac
 
