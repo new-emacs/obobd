@@ -20,7 +20,8 @@
         <module>saiku-server</module>
         <!-- <module>saiku-bi-platform-plugin-p5</module> -->
 <!--        <module>saiku-web-tests</module>-->
-    </modules>
+    <module>ui-webapp</module>
+  </modules>
 
     <distributionManagement>
         <repository>
