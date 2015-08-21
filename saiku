@@ -51,10 +51,15 @@ case $1 in
         mvn clean install -DskipTests=true
         ;;
     "run")
+        mvn clean install -DskipTests=true -e -o
+ 
         echo ""
         echo "Running Server....."
         cd saiku-server/target/dist/saiku-server/
+        kill -9 `ps -a | grep java | awk '{print $1}'`
         sh start-saiku.sh
+        tail -f saiku-server/target/dist/saiku-server/tomcat/logs/catalina.out&
+        tail -f saiku-server/target/dist/saiku-server/tomcat/logs/saiku.log& 
         ;;
     *)
         echo "-----------------------------------------------------"
