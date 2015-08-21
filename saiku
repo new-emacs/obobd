@@ -46,20 +46,28 @@ package can be:
 eom
 }
 
+
 case $1 in
     "build")
         mvn clean install -DskipTests=true
         ;;
     "run")
-        mvn clean install -DskipTests=true -e -o
+        mvn  install -DskipTests=true -e -o
  
         echo ""
         echo "Running Server....."
         cd saiku-server/target/dist/saiku-server/
         kill -9 `ps -a | grep java | awk '{print $1}'`
         sh start-saiku.sh
-        tail -f saiku-server/target/dist/saiku-server/tomcat/logs/catalina.out&
-        tail -f saiku-server/target/dist/saiku-server/tomcat/logs/saiku.log& 
+        sleep 10
+        tail -f saiku-server/target/dist/saiku-server/tomcat/logs/catalina.out &
+        tail -f saiku-server/target/dist/saiku-server/tomcat/logs/saiku.log & 
+        ;;
+    "tom")
+        mvn -f ui-webapp/pom.xml tomcat:run
+        ;;
+    "jetty")
+        mvn -f ui-webapp/pom.xml jetty:run
         ;;
     *)
         echo "-----------------------------------------------------"

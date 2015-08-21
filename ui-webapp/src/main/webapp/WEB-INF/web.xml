@@ -12,7 +12,7 @@
 	</context-param>
     <context-param>
         <param-name>db.url</param-name>
-        <param-value>jdbc:h2:../../data/saiku;MODE=MySQL</param-value>
+        <param-value>jdbc:h2:./data/saiku;MODE=MySQL</param-value>
     </context-param>
     <context-param>
         <param-name>db.user</param-name>
@@ -28,7 +28,7 @@
     </context-param>
     <context-param>
         <param-name>foodmart.url</param-name>
-        <param-value>jdbc:h2:../../data/foodmart;MODE=MySQL</param-value>
+        <param-value>jdbc:h2:./data/foodmart;MODE=MySQL</param-value>
     </context-param>
     <context-param>
         <param-name>foodmart.user</param-name>
@@ -40,7 +40,7 @@
     </context-param>
     <context-param>
         <param-name>earthquakes.url</param-name>
-        <param-value>jdbc:h2:../../data/earthquakes;MODE=MySQL</param-value>
+        <param-value>jdbc:h2:./data/earthquakes;MODE=MySQL</param-value>
     </context-param>
     <context-param>
         <param-name>earthquakes.user</param-name>
@@ -67,12 +67,20 @@
 		<filter-name>org.springframework.security.filterChainProxy</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
 
-	
-	<filter-mapping>
+
+    <filter-mapping>
 		<filter-name>org.springframework.security.filterChainProxy</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

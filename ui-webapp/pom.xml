@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.saiku</groupId>
     <artifactId>saiku</artifactId>
-    <version>3.4.2</version>
+    <version>3.5</version>
   </parent>
   <groupId>com.github.bisone</groupId>
   <artifactId>ui-webapp</artifactId>
-  <version>3.4.2</version>
+  <version>3.5</version>
   <packaging>war</packaging>
   <name>ui-webapp Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -20,43 +20,132 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+        <dependency>
+            <groupId>org.saiku</groupId>
+            <artifactId>saiku-web</artifactId>
+        </dependency>
     <dependency>
-      <groupId>org.saiku</groupId>
-      <artifactId>saiku-web</artifactId>
-      <version>3.4.2</version>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
     </dependency>
-  </dependencies>
+
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-multipart</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mimepull</artifactId>
+                    <groupId>org.jvnet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-spring</artifactId>
+            <version>${jersey.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-cas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+        </dependency>
+         <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-json</artifactId>
+            </dependency>
+        <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-integration-tomcat-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-integration-tomcat-v7</artifactId>
+        </dependency>
+
+      </dependencies>
   <build>
     <finalName>ui-webapp</finalName>
     <plugins>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.7</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <!-- here the phase you need -->
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <!-- <outputDirectory>target/ui-webapp/WEB-INF/</outputDirectory> -->
-              <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/../saiku-webapp/target/saiku-webapp-${project.version}/WEB-INF/</directory>
-                  <filtering>true</filtering>
-                  <includes>
-                    <include>*.xml</include>
-                    <include>*.properties</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- <plugin> -->
+      <!--   <artifactId>maven-resources-plugin</artifactId> -->
+      <!--   <version>2.7</version> -->
+      <!--   <executions> -->
+      <!--     <execution> -->
+      <!--       <id>copy-resources</id> -->
+      <!--       <phase>prepare-package</phase> -->
+      <!--       <goals> -->
+      <!--         <goal>copy-resources</goal> -->
+      <!--       </goals> -->
+      <!--       <configuration> -->
+      <!--         <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory> -->
+      <!--         <resources> -->
+      <!--           <resource> -->
+      <!--             <directory>${basedir}/../saiku-webapp/target/saiku-webapp-${project.version}/WEB-INF/</directory> -->
+      <!--             <filtering>true</filtering> -->
+      <!--             <includes> -->
+      <!--               <include>*.xml</include> -->
+      <!--               <include>*.properties</include> -->
+      <!--             </includes> -->
+      <!--           </resource> -->
+      <!--         </resources> -->
+      <!--       </configuration> -->
+      <!--     </execution> -->
+      <!--   </executions> -->
+      <!-- </plugin> -->
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -70,27 +159,27 @@
         </configuration>
       </plugin>
 
-<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.1.9.v20130131</version>
-				<configuration>
-					<contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
-					<stopKey>CTRL+C</stopKey>
-					<stopPort>8998</stopPort>
-					<scanIntervalSeconds>10</scanIntervalSeconds>
-					<webAppConfig>
-						<contextPath>/</contextPath>
-					</webAppConfig>
-					<connectors>
-						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>8088</port>
-							<maxIdleTime>60000</maxIdleTime>
-						</connector>
-					</connectors>
+      <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>8.1.9.v20130131</version>
+        <configuration>
+          <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
+          <stopKey>CTRL+C</stopKey>
+          <stopPort>8998</stopPort>
+          <scanIntervalSeconds>10</scanIntervalSeconds>
+          <webAppConfig>
+            <contextPath>/</contextPath>
+          </webAppConfig>
+          <connectors>
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+              <port>8088</port>
+              <maxIdleTime>60000</maxIdleTime>
+            </connector>
+          </connectors>
 
-				</configuration>
-			</plugin>
+        </configuration>
+      </plugin>
 
     </plugins>
   </build>
