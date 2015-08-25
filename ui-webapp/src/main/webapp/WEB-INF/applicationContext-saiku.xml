@@ -24,8 +24,8 @@
   
   If you modify these files in anyway it would be very useful if you sent us patches for any useful changes you make.
    -->
-  
-  <!-- BASIC AUTHENTICATION -->
+
+    <!-- BASIC AUTHENTICATION -->
     <security:http pattern="/rest/saiku/info" security="none">
     </security:http>
     <security:http pattern="/rest/saiku/info/ui-settings" security="none">
@@ -35,20 +35,21 @@
     <security:http auto-config='true' use-expressions="true"> <!--access-denied-page="/login.jsp"-->
         <security:csrf disabled="true"/>
         <security:intercept-url pattern="/serverdocs/**" access="isAnonymous()" />
-  	    <security:intercept-url pattern="/rest/saiku/session*" access="isAnonymous() or isFullyAuthenticated()" />
-      	<security:intercept-url pattern="/rest/saiku/session/" access="isAnonymous() or isFullyAuthenticated()" />
+        <security:intercept-url pattern="/rest/saiku/session*" access="isAnonymous() or isFullyAuthenticated()" />
+        <security:intercept-url pattern="/rest/saiku/session/" access="isAnonymous() or isFullyAuthenticated()" />
 
         <security:intercept-url pattern="/rest/**" access="isFullyAuthenticated()" />
-	<security:intercept-url pattern="/json/**" access="isFullyAuthenticated()" />
-    <security:intercept-url pattern="/WEB-INF/classes/legacy-schema" access="isAnonymous()" />
+        <security:intercept-url pattern="/json/**" access="isFullyAuthenticated()" />
+        <security:intercept-url pattern="/WEB-INF/classes/legacy-schema" access="isAnonymous()" />
         <security:logout logout-url="/logout"/>
- 	<security:http-basic/>
-  
-	</security:http>
+        <security:http-basic/>
+        <!--<security:custom-filter ref="ssoHeaderFilter" position="PRE_AUTH_FILTER"/>-->
+    </security:http>
 
-   <import resource="applicationContext-spring-security.xml"/>
 
-  	
+    <import resource="applicationContext-spring-security.xml"/>
 
-	
+
+
+
 </beans>

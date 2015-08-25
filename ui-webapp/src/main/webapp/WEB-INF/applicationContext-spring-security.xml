@@ -7,4 +7,5 @@
 
 	<import resource="applicationContext-spring-security-jdbc.xml"/>
 	<import resource="applicationContext-spring-security-memory.xml"/>
+	<!--<import resource="applicationContext-spring-security-sso.xml"/>-->
 </beans>
