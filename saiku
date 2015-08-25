@@ -67,7 +67,7 @@ case $1 in
         mvn -f ui-webapp/pom.xml tomcat:run
         ;;
     "jetty")
-        mvn -f ui-webapp/pom.xml jetty:run
+        mvn -f ui-webapp/pom.xml jetty:run-exploded 
         ;;
     *)
         echo "-----------------------------------------------------"
