@@ -231,7 +231,7 @@
         <earthquakerepo>/home/will/backup/data</earthquakerepo>
         <earthquakeschema>/home/will/backup/data/Earthquakes.xml</earthquakeschema>
         <earthquakeurl>jdbc:h2:/home/will/backup/data/earthquakes;MODE=MySQL</earthquakeurl>
-        <pluginpath>../webapps/ROOT/js/saiku/plugins/</pluginpath>
+        <pluginpath>/home/will/saiku/saiku-ui/js/saiku/plugins/</pluginpath>
 
         
       </properties>
