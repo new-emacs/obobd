@@ -24,4 +24,7 @@ atlassian-ide-plugin.xml
 osgitests/
 *.log
 ui-webapp/target/
+saiku-ui/.tern-port
+saiku-ui/node_modules2/
+
 a
