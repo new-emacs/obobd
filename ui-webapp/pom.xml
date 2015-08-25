@@ -170,24 +170,23 @@
       </plugin>
 
       <plugin>
-<groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-maven-plugin</artifactId>
-            <version>9.1.3.v20140225</version>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.1.3.v20140225</version>
         <configuration>
           <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
           <stopKey>CTRL+C</stopKey>
           <stopPort>8998</stopPort>
           <scanIntervalSeconds>10</scanIntervalSeconds>
           <webAppConfig>
-            <contextPath>/</contextPath>
-<descriptor>target/ui-webapp/WEB-INF/web.xml</descriptor>
+            <contextPath>/saiku</contextPath>
           </webAppConfig>
-          <connectors>
-            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-              <port>8088</port>
-              <maxIdleTime>60000</maxIdleTime>
-            </connector>
-          </connectors>
+
+          <httpConnector>
+            <port>8088</port>
+          </httpConnector>
+
+
 
         </configuration>
       </plugin>

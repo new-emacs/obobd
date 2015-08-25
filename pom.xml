@@ -46,7 +46,7 @@
         <tomcat.version>apache-tomcat-7.0.62</tomcat.version>
         <tomcat.source>target/stage/tomcat/</tomcat.source>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
-        <calcite.version>0.9.2-incubating-SNAPSHOT</calcite.version>
+        <calcite.version>0.9.2-incubating</calcite.version>
         <pentaho.libs.version>TRUNK-SNAPSHOT</pentaho.libs.version>
         <pentaho.platform.version>5.0.0</pentaho.platform.version>
         <serenity.version>1.0.58</serenity.version>
@@ -280,11 +280,7 @@
                 <artifactId>postgresql</artifactId>
                 <version>9.3-1102-jdbc41</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.hive</groupId>
-                <artifactId>hive-jdbc</artifactId>
-                <version>0.13.1</version>
-            </dependency>
+            
             <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-common</artifactId>
@@ -345,11 +341,6 @@
                 <artifactId>saiku-webapp</artifactId>
                 <version>3.1-SNAPSHOT</version>
                 <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.qmino</groupId>
@@ -974,11 +965,6 @@
                 <groupId>commons-httpclient</groupId>
                 <artifactId>commons-httpclient</artifactId>
                 <version>20020423</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>2.5.1</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet.jsp</groupId>
