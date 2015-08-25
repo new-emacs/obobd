@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.saiku</groupId>
+    <artifactId>saiku</artifactId>
+    <version>3.5</version>
+  </parent>
+  <groupId>com.github.bisone</groupId>
+  <artifactId>ui-webapp</artifactId>
+  <version>3.5</version>
+  <packaging>war</packaging>
+  <name>ui-webapp Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <maven.surefire.plugin.version>2.17</maven.surefire.plugin.version>
+  </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.saiku</groupId>
+      <artifactId>saiku-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey.contribs</groupId>
+      <artifactId>jersey-multipart</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>mimepull</artifactId>
+          <groupId>org.jvnet</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey.contribs</groupId>
+      <artifactId>jersey-spring</artifactId>
+      <version>${jersey.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-beans</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-cas</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-taglibs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.jaxrs</groupId>
+      <artifactId>jackson-jaxrs-json-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-json</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jasig.cas.client</groupId>
+      <artifactId>cas-client-integration-tomcat-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jasig.cas.client</groupId>
+      <artifactId>cas-client-integration-tomcat-v7</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+    </dependency>
+
+  </dependencies>
+  <build>
+    <finalName>ui-webapp</finalName>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+ 
+    <plugins>
+      <!-- <plugin> -->
+      <!--   <artifactId>maven-resources-plugin</artifactId> -->
+      <!--   <version>2.7</version> -->
+      <!--   <executions> -->
+      <!--     <execution> -->
+      <!--       <id>copy-resources</id> -->
+      <!--       <phase>prepare-package</phase> -->
+      <!--       <goals> -->
+      <!--         <goal>copy-resources</goal> -->
+      <!--       </goals> -->
+      <!--       <configuration> -->
+      <!--         <outputDirectory>src/main/webapp/WEB-INF/</outputDirectory> -->
+      <!--         <resources> -->
+      <!--           <resource> -->
+      <!--             <directory>${basedir}/../saiku-webapp/target/saiku-webapp-${project.version}/WEB-INF/</directory> -->
+      <!--             <filtering>true</filtering> -->
+      <!--             <includes> -->
+      <!--               <include>*.xml</include> -->
+      <!--               <include>*.properties</include> -->
+      <!--             </includes> -->
+      <!--           </resource> -->
+      <!--         </resources> -->
+      <!--       </configuration> -->
+      <!--     </execution> -->
+      <!--   </executions> -->
+      <!-- </plugin> -->
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <path>/</path>
+          <port>8088</port>
+          <uriEncoding>UTF-8</uriEncoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.1.3.v20140225</version>
+        <configuration>
+          <contextXml>${basedir}/src/main/webapp/WEB-INF/jetty-context.xml</contextXml>
+          <stopKey>CTRL+C</stopKey>
+          <stopPort>8998</stopPort>
+          <scanIntervalSeconds>10</scanIntervalSeconds>
+          <webAppConfig>
+            <contextPath>/saiku</contextPath>
+          </webAppConfig>
+
+          <httpConnector>
+            <port>8088</port>
+          </httpConnector>
+
+
+
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <webResources>
+  <resource>
+              <directory>src/main/webapp</directory>
+            <!-- enable filtering -->
+            <filtering>true</filtering>
+</resource>
+          </webResources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+
+    <profile>
+      <id>development</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+
+        <_jdbc.driver>com.facebook.presto.jdbc.PrestoDriver</_jdbc.driver>
+        <_jdbc.url>jdbc:h2:/home/will/backup/data/saiku;MODE=MySQL</_jdbc.url>
+        <_jdbc.username>sa</_jdbc.username>
+        <_jdbc.password></_jdbc.password>
+
+        <_foodmart.url>jdbc:h2:/home/will/backup/data/foodmart;MODE=MySQL</_foodmart.url>
+        <_earthquakes.url>jdbc:h2:/home/will/backup/data/earthquakes;MODE=MySQL</_earthquakes.url>
+
+        <repoconfig>/home/will/backup/repository/configuration.xml</repoconfig>
+        <repodata>/home/will/backup/repository/data</repodata>
+        <foodmartrepo>/home/will/backup/data</foodmartrepo>
+        <foodmartschema>/home/will/backup/data/FoodMart4.xml</foodmartschema>
+        <foodmarturl>jdbc:h2:/home/will/backup/data/foodmart;MODE=MySQL</foodmarturl>
+        <earthquakerepo>/home/will/backup/data</earthquakerepo>
+        <earthquakeschema>/home/will/backup/data/Earthquakes.xml</earthquakeschema>
+        <earthquakeurl>jdbc:h2:/home/will/backup/data/earthquakes;MODE=MySQL</earthquakeurl>
+        <pluginpath>/home/will/saiku/saiku-ui/js/saiku/plugins/</pluginpath>
+
+        
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven.surefire.plugin.version}</version>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.7</version>
+            <executions>
+              <execution>
+                <id>copy-resources</id>
+                <!-- here the phase you need -->
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/target/ui-webapp/WEB-INF</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/main/webapp/WEB-INF</directory>
+                      <filtering>true</filtering>
+                      <includes>
+                        <include>saiku-beans.xml</include>
+                        <include>web.xml</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

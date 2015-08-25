@@ -66,4 +66,15 @@ public class InfoResource {
      return Response.ok(entity).build();
   }
 
+  @GET
+  @Produces({"application/json" })
+  @ReturnType("java.util.List<Plugin>")
+  @Path("/ui-settings")
+  public Response getUISettings() {
+
+    GenericEntity<List<Plugin>> entity =
+            new GenericEntity<List<Plugin>>(platformService.getAvailablePlugins()){};
+    return Response.ok(entity).build();
+  }
+
 }

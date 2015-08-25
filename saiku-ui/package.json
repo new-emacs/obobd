@@ -23,7 +23,8 @@
   },
   "main": "server.js",
   "scripts": {
-    "start": "node server.js 9999 127.0.0.1 8080"
+      "start": "node server.js 9999 127.0.0.1 8080",
+    "start2": "node server.js 9988 127.0.0.1 8088"
   },
   "engines": {
     "node": ">=0.10.x",

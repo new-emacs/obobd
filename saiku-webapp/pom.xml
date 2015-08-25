@@ -2,11 +2,11 @@
     <parent>
         <artifactId>saiku</artifactId>
         <groupId>org.saiku</groupId>
-        <version>3.4.2</version>
+        <version>3.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>saiku-webapp</artifactId>
-    <version>3.4.2</version>
+    <version>3.5</version>
     <name>saiku - webapp</name>
     <packaging>war</packaging>
 
@@ -220,6 +220,16 @@
         <dependency>
             <groupId>org.saiku</groupId>
             <artifactId>saiku-olap-util</artifactId>
+<exclusions>
+  <exclusion> 
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-log4j12</artifactId>
+  </exclusion>
+  <exclusion> 
+    <groupId>log4j</groupId>
+    <artifactId>log4j</artifactId>
+  </exclusion>
+</exclusions> 
         </dependency>
         <dependency>
             <groupId>org.saiku</groupId>
