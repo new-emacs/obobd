@@ -10,14 +10,14 @@
         </bean>-->
     <bean id="repositoryDsManager" class="org.saiku.service.datasource.RepositoryDatasourceManager" init-method="load" destroy-method="unload">
         <property name="userService" ref="userServiceBean"/>
-        <property name="configurationpath" value="./repository/configuration.xml"/>
-        <property name="datadir" value="./repository/data"/>
-        <property name="foodmartdir" value="data"/>
-        <property name="foodmartschema" value="./data/FoodMart4.xml"/>
-        <property name="foodmarturl" value="jdbc:h2:./data/foodmart;MODE=MySQL"/>
-        <property name="earthquakeDir" value="data"/>
-        <property name="earthquakeSchema" value="./data/Earthquakes.xml"/>
-        <property name="earthquakeUrl" value="jdbc:h2:./data/earthquakes;MODE=MySQL"/>
+        <property name="configurationpath" value="${repoconfig}"/>
+        <property name="datadir" value="${repodata}"/>
+        <property name="foodmartdir" value="${foodmartrepo}"/>
+        <property name="foodmartschema" value="${foodmartschema}"/>
+        <property name="foodmarturl" value="${foodmarturl}"/>
+        <property name="earthquakeDir" value="${earthquakerepo}"/>
+        <property name="earthquakeSchema" value="${earthquakeschema}"/>
+        <property name="earthquakeUrl" value="${earthquakeurl}"/>
         <property name="repoPassword" value ="sa!kuanalyt!cs"/>
         <!-- If you change the repoPassword set this property for at least 1 restart to update the old repo password-->
         <!--<property name="oldRepoPassword" value="sa!kuanalyt!cs"/>-->
@@ -105,7 +105,7 @@
     </bean>
 
     <bean id="platformBean" class="org.saiku.service.PlatformUtilsService">
-        <property name="path" value="../webapps/ROOT/js/saiku/plugins/"/>
+        <property name="path" value="${pluginpath}"/>
     </bean>
 
     <bean id="infoResource" class="org.saiku.web.rest.resources.InfoResource">

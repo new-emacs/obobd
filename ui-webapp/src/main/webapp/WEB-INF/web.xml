@@ -12,15 +12,15 @@
 	</context-param>
     <context-param>
         <param-name>db.url</param-name>
-        <param-value>jdbc:h2:./data/saiku;MODE=MySQL</param-value>
+        <param-value>${_jdbc.url}</param-value>
     </context-param>
     <context-param>
         <param-name>db.user</param-name>
-        <param-value>sa</param-value>
+        <param-value>${_jdbc.username}</param-value>
     </context-param>
     <context-param>
         <param-name>db.password</param-name>
-        <param-value></param-value>
+        <param-value>${_jdbc.password}</param-value>
     </context-param>
     <context-param>
         <param-name>db.encryptpassword</param-name>
@@ -28,27 +28,27 @@
     </context-param>
     <context-param>
         <param-name>foodmart.url</param-name>
-        <param-value>jdbc:h2:./data/foodmart;MODE=MySQL</param-value>
+        <param-value>${_foodmart.url}</param-value>
     </context-param>
     <context-param>
         <param-name>foodmart.user</param-name>
-        <param-value>sa</param-value>
+        <param-value>${_jdbc.username}</param-value>
     </context-param>
     <context-param>
         <param-name>foodmart.password</param-name>
-        <param-value></param-value>
+        <param-value>${_jdbc.password}</param-value>
     </context-param>
     <context-param>
         <param-name>earthquakes.url</param-name>
-        <param-value>jdbc:h2:./data/earthquakes;MODE=MySQL</param-value>
+        <param-value>${_earthquakes.url}</param-value>
     </context-param>
     <context-param>
         <param-name>earthquakes.user</param-name>
-        <param-value>sa</param-value>
+        <param-value>${_jdbc.username}</param-value>
     </context-param>
     <context-param>
         <param-name>earthquakes.password</param-name>
-        <param-value></param-value>
+        <param-value>${_jdbc.password}</param-value>
     </context-param>
     <context-param>
         <param-name>db.tcpServer</param-name>
