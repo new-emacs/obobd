@@ -28,3 +28,4 @@ saiku-ui/.tern-port
 saiku-ui/node_modules2/
 
 a
+util/earthquakes.sql

@@ -25,8 +25,14 @@
     </bean>
 
     <!-- <property name="path" value="file:///var/saiku/saiku-datasources/"/> -->
-    <bean id="h2database" class="org.saiku.database.Database" init-method="init">
+    <!--<bean id="h2database" class="org.saiku.database.Database" init-method="init">-->
+        <!--<property name="datasourceManager" ref="repositoryDsManager"/>-->
+        <!-- -->
+    <!--</bean>-->
+
+    <bean id="mySQLdatabase" class="org.saiku.database.MySQLDatabase" init-method="init">
         <property name="datasourceManager" ref="repositoryDsManager"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="sessionService" class="org.saiku.web.service.SessionService">
