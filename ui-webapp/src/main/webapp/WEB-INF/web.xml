@@ -24,11 +24,11 @@
     </context-param>
     <context-param>
         <param-name>db.encryptpassword</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
     <context-param>
         <param-name>foodmart.url</param-name>
-        <param-value>${_foodmart.url}</param-value>
+        <param-value>${foodmarturl}</param-value>
     </context-param>
     <context-param>
         <param-name>foodmart.user</param-name>
@@ -40,7 +40,7 @@
     </context-param>
     <context-param>
         <param-name>earthquakes.url</param-name>
-        <param-value>${_earthquakes.url}</param-value>
+        <param-value>${earthquakeurl}</param-value>
     </context-param>
     <context-param>
         <param-name>earthquakes.user</param-name>

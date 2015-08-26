@@ -43,11 +43,11 @@ GROUP BY u.USER_ID]]>
     </bean>
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.h2.Driver" />
+        <property name="driverClassName" value="${_jdbc.driver}" />
         <property name="url"
-                  value="jdbc:h2:./data/saiku;MODE=MySQL"/>
-        <property name="username" value="sa" />
-        <property name="password" value="" />
+                  value="${_jdbc.url}"/>
+        <property name="username" value="${_jdbc.username}" />
+        <property name="password" value="${_jdbc.password}" />
     </bean>
 
     <bean id="passwordEncoder"
