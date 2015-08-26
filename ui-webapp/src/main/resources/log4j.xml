@@ -68,7 +68,7 @@
    <!-- ======================= -->
 
    <root>
-      <priority value="WARN" />
+      <priority value="DEBUG" />
       <appender-ref ref="SAIKUCONSOLE"/>
       <appender-ref ref="SAIKUFILE"/>
    </root>
