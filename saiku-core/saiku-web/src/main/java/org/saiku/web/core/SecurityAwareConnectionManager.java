@@ -295,6 +295,7 @@ public class SecurityAwareConnectionManager extends AbstractConnectionManager im
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			log.error("Error connecting: "+name, e);
 		}
 
