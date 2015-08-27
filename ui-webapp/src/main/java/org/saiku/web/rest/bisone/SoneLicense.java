@@ -8,11 +8,8 @@ import java.util.Date;
  */
 public class SoneLicense implements Serializable {
 
-    private static final long serialVersionUID = -1;
-    public static final String TYPE_LIFETIME = "lifetime";
-    public static final String TYPE_SINGLE_VERSION = "single-version";
-    public static final String TYPE_TRIAL = "trial";
-    public static final String TYPE_FULL = "full";
+    private static final long serialVersionUID = -200000188776554441l;
+
     public static final String TYPE_FULL_MAX_MEM = "full-maxmem";
     private String email = "bisone@github.com";
     private Date expiration = new Date();
