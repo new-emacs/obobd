@@ -2,14 +2,14 @@
 
 function usageBuild() {
     cat <<eom
-Usage: saiku build 
+Usage: saiku build
 编译所有项目
 eom
 }
 
 function usageRun() {
     cat <<eom
-Usage: saiku tom | jetty  
+Usage: saiku tom | jetty
 tom: 原始方式启动
 jetty: 简洁方式启动
 eom
@@ -34,19 +34,18 @@ case $1 in
         sh start-saiku.sh
         tail -f tomcat/logs/catalina.out &
         tail -f tomcat/logs/saiku.log &
-
-
-        ;; 
+        ;;
     "jetty")
         cd saiku-ui
         npm run start2 &
-
-
+        cd -
+        cd saiku-core
+        mvn clean install -DskipTests=true -e -o
         cd -
         cd ui-webapp
-        mvn install 
-        mvn  jetty:run-exploded 
-               ;;
+        mvn install
+        mvn  jetty:run-exploded
+        ;;
     *)
         echo "-----------------------------------------------------"
         echo "	E R R O R : Invalid option: $1" >&2
