@@ -89,8 +89,11 @@ var SplashScreen = Backbone.View.extend({
 		else {
 			license.fetch_license('api/license/', function (opt) {
                 //$(self.el).html(self.template()).appendTo($('body'));
-                $(self.el).html(self.template());
-
+          try{
+              $(self.el).html(self.template());
+             }catch(e){
+                 console.debug("error",e);
+             }
                 if (opt.status !== 'error' && opt.data.get("licenseType") != "trial") {
 
                     $(".enterprisetoggle").css("visibility", "hidden");
@@ -159,8 +162,11 @@ var SplashScreen = Backbone.View.extend({
                 $(that.el).find(".responsive-container").fitVids();
                 license.fetch_license('api/license/', function (opt) {
                     //$(self.el).html(self.template()).appendTo($('body'));
+                    try{
                     $(self.el).html(self.template());
-
+                    }catch(e){
+                      //  console.debug("error",e);
+                    }
                     if (opt.status !== 'error' && opt.data.get("licenseType") != "trial") {
 
                         $(".enterprisetoggle").css("visibility", "hidden");
