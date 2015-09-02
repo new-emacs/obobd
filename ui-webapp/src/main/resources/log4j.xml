@@ -141,4 +141,13 @@
     </category>
 
 
+
+    <!-- Spring log -->
+
+    <category name="org.springframework.security">
+        <priority value="DEBUG" />
+        <appender-ref ref="SAIKUCONSOLE"/>
+    </category>
+
+
 </log4j:configuration>
