@@ -112,6 +112,8 @@ public class UserService implements IUserManager, Serializable {
     public boolean isAdmin() {
         List<String> roles = (List<String> ) sessionService.getAllSessionObjects().get("roles");
 
+        System.out.println("roles"+roles+"adminRoles="+adminRoles);
+
         return !Collections.disjoint(roles, adminRoles);
 
     }

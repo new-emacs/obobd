@@ -53,7 +53,7 @@ GROUP BY u.USER_ID]]>
     <bean id="passwordEncoder"
           class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
-    <!--    <bean id="customerDAO" class="org.saiku.database.JdbcUserDAO">
+      <bean id="customerDAO" class="org.saiku.database.JdbcUserDAO">
             <property name="dataSource" ref="dataSource" />
         </bean>
 
@@ -63,5 +63,5 @@ GROUP BY u.USER_ID]]>
         <bean id="adminBean" class="org.saiku.web.rest.resources.AdminResource">
             <property name="userService" ref="userServiceBean"/>
         <property name="datasourceService" ref="datasourceServiceBean"/>
-        </bean>-->
+        </bean>
 </beans>

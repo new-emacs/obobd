@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  - Sample namespace-based configuration
-  -
-  -->
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,7 +8,7 @@
 
     <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
         <sec:filter-chain-map request-matcher="ant">
-            <sec:filter-chain pattern="/**" filters="sif,j2eePreAuthFilter,logoutFilter,etf,fsi"/>
+            <sec:filter-chain pattern="/**" filters="securityContextHolderAwareRequestFilter,j2eePreAuthFilter"/>
         </sec:filter-chain-map>
     </bean>
 
@@ -91,5 +86,15 @@
     <bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter"/>
 
     <bean id="securityContextHolderAwareRequestFilter" class="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter"/>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${_jdbc.driver}" />
+        <property name="url"
+                  value="${_jdbc.url}"/>
+        <property name="username" value="${_jdbc.username}" />
+        <property name="password" value="${_jdbc.password}" />
+    </bean>
+
 
 </beans>

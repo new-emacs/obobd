@@ -63,17 +63,8 @@
 		<session-timeout>60</session-timeout>
 	</session-config>
 	
-	<filter>
-		<filter-name>org.springframework.security.filterChainProxy</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
 
 
-
-    <filter-mapping>
-		<filter-name>org.springframework.security.filterChainProxy</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
 
 
     <listener>

@@ -30,6 +30,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.*;
@@ -147,7 +148,7 @@ public class SessionService implements ISessionService {
 	 */
 	public void authenticate(HttpServletRequest req, String username, String password) {
 		try {
-			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+			PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(username, password);
 			token.setDetails(new WebAuthenticationDetails(req));
 			Authentication authentication = this.authenticationManager.authenticate(token);
 			log.debug("Logging in with [{}]", authentication.getPrincipal());
