@@ -13,18 +13,18 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.saiku.web.core;
+package com.bisone.saiku.security.replace;
 
+import mondrian.olap4j.SaikuMondrianHelper;
+import org.apache.commons.lang.StringUtils;
+import org.olap4j.OlapConnection;
+import org.olap4j.OlapException;
 import org.saiku.datasources.connection.AbstractConnectionManager;
 import org.saiku.datasources.connection.ISaikuConnection;
 import org.saiku.datasources.connection.SaikuConnectionFactory;
 import org.saiku.datasources.datasource.SaikuDatasource;
 import org.saiku.olap.util.exception.SaikuOlapException;
 import org.saiku.service.ISessionService;
-
-import org.apache.commons.lang.StringUtils;
-import org.olap4j.OlapConnection;
-import org.olap4j.OlapException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,8 +35,6 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.*;
-
-import mondrian.olap4j.SaikuMondrianHelper;
 
 public class SecurityAwareConnectionManager extends AbstractConnectionManager implements Serializable {
 
