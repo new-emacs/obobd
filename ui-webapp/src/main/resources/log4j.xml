@@ -12,7 +12,7 @@
 | owebsite: http://jakarta.apache.org/log4j
 -->
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
 
     <!-- ================================= -->
     <!-- Preserve messages in a local file -->
@@ -50,29 +50,7 @@
         </layout>
     </appender>
 
-    <!-- ================ -->
-    <!-- Limit categories -->
-    <!-- ================ -->
 
-    <category name="org.saiku">
-        <priority value="DEBUG"/>
-    </category>
-
-    <category name="com.bisone.saiku">
-        <priority value="DEBUG"/>
-        <appender-ref ref="SAIKUCONSOLE"/>
-        <appender-ref ref="SAIKUFILE"/>
-    </category>
-
-    <!-- ======================= -->
-    <!-- Setup the Root category -->
-    <!-- ======================= -->
-
-    <root>
-        <priority value="WARN"/>
-        <appender-ref ref="SAIKUCONSOLE"/>
-        <appender-ref ref="SAIKUFILE"/>
-    </root>
 
 
     <!--  optional logging info for the Mondrian OLAP Engine       -->
@@ -93,10 +71,6 @@
         </layout>
     </appender>
 
-    <category name="mondrian">
-        <priority value="INFO"/>
-        <appender-ref ref="MONDRIAN"/>
-    </category>
 
 
     <!-- ========================================================= -->
@@ -114,10 +88,6 @@
         </layout>
     </appender>
 
-    <category name="mondrian.mdx">
-        <priority value="INFO"/>
-        <appender-ref ref="MDXLOG"/>
-    </category>
 
 
     <!-- ========================================================= -->
@@ -142,12 +112,49 @@
 
 
 
-    <!-- Spring log -->
 
     <category name="org.springframework.security">
-        <priority value="DEBUG" />
+        <priority value="DEBUG"/>
         <appender-ref ref="SAIKUCONSOLE"/>
     </category>
+
+    <!-- ================ -->
+    <!-- Limit categories -->
+    <!-- ================ -->
+
+    <category name="org.saiku">
+        <priority value="DEBUG"/>
+        <appender-ref ref="SAIKUCONSOLE"/>
+        <appender-ref ref="SAIKUFILE"/>
+    </category>
+
+    <category name="com.bisone.saiku">
+        <priority value="DEBUG"/>
+        <appender-ref ref="SAIKUCONSOLE"/>
+        <appender-ref ref="SAIKUFILE"/>
+    </category>
+
+
+    <category name="mondrian">
+        <priority value="INFO"/>
+        <appender-ref ref="MONDRIAN"/>
+    </category>
+
+
+    <category name="mondrian.mdx">
+        <priority value="INFO"/>
+        <appender-ref ref="MDXLOG"/>
+    </category>
+
+    <!-- ======================= -->
+    <!-- Setup the Root category -->
+    <!-- ======================= -->
+
+    <root>
+        <priority value="DEBUG"/>
+        <appender-ref ref="SAIKUCONSOLE"/>
+        <appender-ref ref="SAIKUFILE"/>
+    </root>
 
 
 </log4j:configuration>

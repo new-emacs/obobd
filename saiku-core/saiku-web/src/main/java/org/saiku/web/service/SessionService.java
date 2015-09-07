@@ -182,7 +182,8 @@ public class SessionService implements ISessionService {
 		if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Object p = auth.getPrincipal();
-			//createSession(auth, null, null);
+			//TODO 研究为什么下面这行代码被注释掉了。
+			createSession(auth, null, null);
 			if (sessionHolder.containsKey(p)) {
 				Map<String,Object> r = new HashMap<String,Object>();
 				r.putAll(sessionHolder.get(p)); 

@@ -179,13 +179,14 @@ public class SecurityAwareConnectionManager extends AbstractConnectionManager im
 			String roleName = null;
 
 			for (String sprRole : springRoles) {
-				if (conRoles.contains(sprRole)) {
+				//TODO 研究如何获得connection roles
+				//if (conRoles.contains(sprRole)) {
 					if (roleName == null) {
 						roleName = sprRole;
 					} else {
 						roleName += "," + sprRole;
 					}
-				}
+				//}
 			}
 
 			if (setRole(con, roleName, datasource)) {
