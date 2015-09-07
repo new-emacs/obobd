@@ -82,9 +82,16 @@
         <security:authentication-provider ref="preauthAuthProvider"/>
     </security:authentication-manager>
 
-    <!--<bean id="sessionService" class="com.bisone.saiku.security.SessionService">-->
-    <!--<property name="authenticationManager" ref="authenticationManager"/>-->
-    <!--</bean>-->
+    <bean id="sessionService" class="com.bisone.saiku.security.replace.SessionService">
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
+
+    <bean id="connectionManager" class="com.bisone.saiku.security.replace.SecurityAwareConnectionManager" init-method="init"
+          destroy-method="destroy" depends-on="mondrianVFS">
+        <property name="dataSourceManager" ref="repositoryDsManager"/>
+        <property name="sessionService" ref="sessionService"/>
+
+    </bean>
 
 
 </beans>
