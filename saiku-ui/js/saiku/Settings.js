@@ -27,7 +27,7 @@ var Settings = {
     DIMENSION_PREFETCH: true,
     DIMENSION_SHOW_ALL: true,
     DIMENSION_SHOW_REDUCED: false,
-    ERROR_LOGGING: false,
+    ERROR_LOGGING: true,
     I18N_LOCALE: "en",
     // number of erroneous ajax calls in a row before UI cant recover
     ERROR_TOLERANCE: 3,

@@ -3,7 +3,6 @@ package com.bisone.saiku.interceptor;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import org.springframework.util.Assert;
@@ -31,22 +30,24 @@ public class SSORequestHeaderAuthenticationFilter extends AbstractPreAuthenticat
     /**
      * Read and return header named by <tt>principalRequestHeader</tt> from Request
      *
-     * @throws PreAuthenticatedCredentialsNotFoundException
-     *             if the header is missing and
-     *             <tt>exceptionIfHeaderMissing</tt> is set to <tt>true</tt>.
+     * @throws PreAuthenticatedCredentialsNotFoundException if the header is missing and
+     *                                                      <tt>exceptionIfHeaderMissing</tt> is set to <tt>true</tt>.
      */
     protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
 
 
         String principal = request.getHeader(principalRequestHeader);
 
-        log.debug("获得认证信息==="+principal);
+        log.debug("获得认证信息===" + principal);
+
+        System.out.println("获得认证信息===" + principal);
 
         if (principal == null) {
             if (exceptionIfHeaderMissing) {
                 throw new PreAuthenticatedCredentialsNotFoundException(principalRequestHeader
                         + " header not found in request.");
-            } if (StringUtils.isNotBlank(testUserId)) {
+            }
+            if (StringUtils.isNotBlank(testUserId)) {
                 log.warn("spring configuration has a test user id " + testUserId);
                 principal = testUserId;
             } else if (request.getSession().getAttribute("session_user") != null) {
@@ -59,6 +60,8 @@ public class SSORequestHeaderAuthenticationFilter extends AbstractPreAuthenticat
         // also set it into the session, sometimes that's easier for jsp/faces
         // to get at..
         request.getSession().setAttribute("session_user", principal);
+
+        System.out.println("获得认证信息===" + principal);
         return principal;
     }
 
@@ -82,14 +85,12 @@ public class SSORequestHeaderAuthenticationFilter extends AbstractPreAuthenticat
 
     /**
      * Exception if the principal header is missing. Default <tt>false</tt>
+     *
      * @param exceptionIfHeaderMissing
      */
     public void setExceptionIfHeaderMissing(boolean exceptionIfHeaderMissing) {
         this.exceptionIfHeaderMissing = exceptionIfHeaderMissing;
     }
 
-//    public void setAuthenticationDetailsSource(AuthenticationDetailsSource source) {
-//        //    log.info("testing authenticationDetailsSource set " + source);
-//        super.setAuthenticationDetailsSource(source);
-//    }
+
 }

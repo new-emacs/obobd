@@ -46,6 +46,11 @@ case $1 in
         mvn install
         mvn  jetty:run-exploded
         ;;
+    "ui")
+        cd saiku-ui
+        npm run start2 &
+        grunt &
+        ;;
     *)
         echo "-----------------------------------------------------"
         echo "	E R R O R : Invalid option: $1" >&2

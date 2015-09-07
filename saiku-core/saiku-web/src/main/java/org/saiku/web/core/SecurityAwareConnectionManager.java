@@ -241,6 +241,7 @@ public class SecurityAwareConnectionManager extends AbstractConnectionManager im
 
 
 	private List<String> getSpringRoles() {
+		//System.out.println(this.sessionService.getSession().getAttribute("SPRING_SECURITY_CONTEXT"));
 		List<String> roles = new ArrayList<String>();
 		if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 			Collection<? extends GrantedAuthority>
