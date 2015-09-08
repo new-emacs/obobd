@@ -130,15 +130,18 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
     }
 
     //Make sure new password is set to repo default
-    if(password!=null && !password.equals("")) {
-      UserManager userManager = ((JackrabbitSession) session).getUserManager();
-      Authorizable authorizable = userManager.getAuthorizable("admin");
+    //TODO Fixme mysql 不支持 UserManager
+    try {
+      if (password != null && !password.equals("")) {
+        UserManager userManager = ((JackrabbitSession) session).getUserManager();
+        Authorizable authorizable = userManager.getAuthorizable("admin");
 
-      ((User) authorizable).changePassword(password);
+        ((User) authorizable).changePassword(password);
+      }
+    }catch (Exception e){
+      e.printStackTrace();
     }
-
   }
-
 
   public boolean start(UserService userService) throws RepositoryException {
     this.userService = userService;
@@ -156,10 +159,14 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
       log.info("logged in");
 
       JackrabbitSession js = (JackrabbitSession) session;
-      if(js.getUserManager().getAuthorizable("anon")==null) {
-        js.getUserManager().createUser("anon", "anon");
-        js.save();
+      try {
+        if (js.getUserManager().getAuthorizable("anon") == null) {
+          js.getUserManager().createUser("anon", "anon");
+          js.save();
 
+        }
+      }catch(Exception e){
+        e.printStackTrace();
       }
       session = js;
       root = session.getRootNode();

@@ -1,6 +1,7 @@
 package org.saiku.database;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.jackrabbit.api.JackrabbitNodeTypeManager;
 import org.h2.jdbcx.JdbcDataSource;
 import org.saiku.datasources.datasource.SaikuDatasource;
 import org.saiku.service.datasource.IDatasourceManager;
@@ -11,10 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.jcr.Workspace;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -327,5 +331,25 @@ public class MySQLDatabase {
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    private  void registerCustomNodeTypes(Workspace ws, String cndFileName) throws Exception {
+        JackrabbitNodeTypeManager ntManager = (JackrabbitNodeTypeManager) ws.getNodeTypeManager();
+        InputStream is = null;
+
+        try
+        {
+            // Open the CND file
+            is =  new FileInputStream(cndFileName);
+            // Register the custom node types
+            ntManager.registerNodeTypes(is, JackrabbitNodeTypeManager.TEXT_X_JCR_CND);
+        }
+        finally
+        {
+            if (is != null)
+            {
+                is.close();
+            }
+        }
     }
 }
