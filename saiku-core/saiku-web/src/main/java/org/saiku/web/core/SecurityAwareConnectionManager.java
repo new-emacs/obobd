@@ -179,13 +179,14 @@ public class SecurityAwareConnectionManager extends AbstractConnectionManager im
 			String roleName = null;
 
 			for (String sprRole : springRoles) {
-				if (conRoles.contains(sprRole)) {
+				//TODO 研究如何获得connection roles
+				//if (conRoles.contains(sprRole)) {
 					if (roleName == null) {
 						roleName = sprRole;
 					} else {
 						roleName += "," + sprRole;
 					}
-				}
+				//}
 			}
 
 			if (setRole(con, roleName, datasource)) {
@@ -241,6 +242,7 @@ public class SecurityAwareConnectionManager extends AbstractConnectionManager im
 
 
 	private List<String> getSpringRoles() {
+		//System.out.println(this.sessionService.getSession().getAttribute("SPRING_SECURITY_CONTEXT"));
 		List<String> roles = new ArrayList<String>();
 		if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
 			Collection<? extends GrantedAuthority>
@@ -295,6 +297,7 @@ public class SecurityAwareConnectionManager extends AbstractConnectionManager im
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			log.error("Error connecting: "+name, e);
 		}
 

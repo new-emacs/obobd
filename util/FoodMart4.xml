@@ -238,6 +238,7 @@
     </Dimension>
 
     <Dimension name='Time' table='time_by_day' type='TIME' key='Time Id'>
+
         <Attributes>
             <Attribute name='Year' keyColumn='the_year' levelType='TimeYears' hasHierarchy='false'>
             </Attribute>
@@ -289,7 +290,7 @@
                 </Name>
             </Attribute>
             <Attribute name='Date' keyColumn='the_date' hasHierarchy='false'/>
-            <Attribute name='Date String' keyColumn='date_string' hasHierarchy='false'/>
+            <Attribute name='Date String' keyColumn='the_date' hasHierarchy='false'/>
             <Attribute name='Time Id' keyColumn='time_id' hasHierarchy='false'/>
         </Attributes>
 
@@ -915,28 +916,28 @@
         <!--</MeasureGroups>-->
     <!--</Cube>-->
 
-    <Role name='California manager'>
-        <SchemaGrant access='none'>
-            <CubeGrant cube='Sales' access='all'>
-                <HierarchyGrant hierarchy='[Store].[Stores]' access='custom' topLevel='[Store].[Stores].[Store Country]'>
-                    <MemberGrant member='[Store].[Stores].[USA].[CA]' access='all'/>
-                    <MemberGrant member='[Store].[Stores].[USA].[CA].[Los Angeles]' access='none'/>
-                </HierarchyGrant>
-                <HierarchyGrant hierarchy='[Customer].[Customers]' access='custom' topLevel='[Customer].[Customers].[State Province]' bottomLevel='[Customer].[Customers].[City]'>
-                    <MemberGrant member='[Customer].[Customers].[USA].[CA]' access='all'/>
-                    <MemberGrant member='[Customer].[Customers].[USA].[CA].[Los Angeles]' access='none'/>
-                </HierarchyGrant>
-                <HierarchyGrant hierarchy='[Gender]' access='none'/>
-            </CubeGrant>
-        </SchemaGrant>
-    </Role>
+  <!--   <Role name='California manager'> -->
+  <!--       <SchemaGrant access='none'> -->
+  <!--           <CubeGrant cube='Sales' access='all'> -->
+  <!--               <HierarchyGrant hierarchy='[Store].[Stores]' access='custom' topLevel='[Store].[Stores].[Store Country]'> -->
+  <!--                   <MemberGrant member='[Store].[Stores].[USA].[CA]' access='all'/> -->
+  <!--                   <MemberGrant member='[Store].[Stores].[USA].[CA].[Los Angeles]' access='none'/> -->
+  <!--               </HierarchyGrant> -->
+  <!--               <HierarchyGrant hierarchy='[Customer].[Customers]' access='custom' topLevel='[Customer].[Customers].[State Province]' bottomLevel='[Customer].[Customers].[City]'> -->
+  <!--                   <MemberGrant member='[Customer].[Customers].[USA].[CA]' access='all'/> -->
+  <!--                   <MemberGrant member='[Customer].[Customers].[USA].[CA].[Los Angeles]' access='none'/> -->
+  <!--               </HierarchyGrant> -->
+  <!--               <HierarchyGrant hierarchy='[Gender]' access='none'/> -->
+  <!--           </CubeGrant> -->
+  <!--       </SchemaGrant> -->
+  <!--   </Role> -->
 
-    <Role name='No HR Cube'>
-        <SchemaGrant access='all'>
-            <CubeGrant cube='HR' access='none'/>
-        </SchemaGrant>
-    </Role>
-    <Role name='No Cubes'>
-	<SchemaGrant access='none'/>
-    </Role>
+  <!--   <Role name='No HR Cube'> -->
+  <!--       <SchemaGrant access='all'> -->
+  <!--           <CubeGrant cube='HR' access='none'/> -->
+  <!--       </SchemaGrant> -->
+  <!--   </Role> -->
+  <!--   <Role name='No Cubes'> -->
+	<!-- <SchemaGrant access='none'/> -->
+  <!--   </Role> -->
 </Schema>

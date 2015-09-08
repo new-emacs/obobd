@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Log4j Configuration                                                  -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<!--
+| For more configuration information and examples see the Jakarta Log4j
+| owebsite: http://jakarta.apache.org/log4j
+-->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
+
+    <!-- ================================= -->
+    <!-- Preserve messages in a local file -->
+    <!-- ================================= -->
+
+    <!-- A time/date based rolling appender -->
+    <appender name="SAIKUFILE" class="org.apache.log4j.RollingFileAppender">
+
+        <param name="File" value="~/backup/saiku.log"/>
+        <param name="Append" value="false"/>
+        <param name="MaxFileSize" value="2000KB"/>
+        <param name="MaxBackupIndex" value="10"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <!-- The default pattern: Date Priority [Category] Message\n -->
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+
+            <!-- The full pattern: Date MS Priority [Category] (Thread:NDC) Message\n
+                 <param name="ConversionPattern" value="%d %-5r %-5p [%c] (%t:%x) %m%n"/>
+            -->
+        </layout>
+    </appender>
+
+    <!-- ============================== -->
+    <!-- Append messages to the console -->
+    <!-- ============================== -->
+
+    <appender name="SAIKUCONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <param name="Threshold" value="DEBUG"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <!-- The default pattern: Date Priority [Category] Message\n -->
+            <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
+
+
+    <!--  optional logging info for the Mondrian OLAP Engine       -->
+
+
+    <!-- ========================================================= -->
+    <!-- Special Log File specifically for Mondrian                -->
+    <!-- ========================================================= -->
+
+    <appender name="MONDRIAN" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="~/backup/mondrian.log"/>
+        <param name="Append" value="false"/>
+        <param name="MaxFileSize" value="500KB"/>
+        <param name="MaxBackupIndex" value="1"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
+
+
+    <!-- ========================================================= -->
+    <!-- Special Log File specifically for Mondrian MDX Statements -->
+    <!-- ========================================================= -->
+
+
+    <appender name="MDXLOG" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="~/backup/mondrian_mdx.log"/>
+        <param name="Append" value="false"/>
+        <param name="MaxFileSize" value="500KB"/>
+        <param name="MaxBackupIndex" value="1"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
+
+
+    <!-- ========================================================= -->
+    <!-- Special Log File specifically for Mondrian SQL Statements -->
+    <!-- ========================================================= -->
+
+
+    <appender name="SQLLOG" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="~/backup/mondrian_sql.log"/>
+        <param name="Append" value="false"/>
+        <param name="MaxFileSize" value="500KB"/>
+        <param name="MaxBackupIndex" value="1"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
+        </layout>
+    </appender>
+
+    <category name="mondrian.sql">
+        <priority value="DEBUG"/>
+        <appender-ref ref="SQLLOG"/>
+    </category>
+
+
+
+    <category name="org.springframework.security">
+        <priority value="DEBUG"/>
+        <appender-ref ref="SAIKUCONSOLE"/>
+    </category>
+
+    <!-- ================ -->
+    <!-- Limit categories -->
+    <!-- ================ -->
+
+    <category name="org.saiku">
+        <priority value="DEBUG"/>
+        <appender-ref ref="SAIKUCONSOLE"/>
+        <appender-ref ref="SAIKUFILE"/>
+    </category>
+
+    <category name="com.bisone.saiku">
+        <priority value="DEBUG"/>
+        <appender-ref ref="SAIKUCONSOLE"/>
+        <appender-ref ref="SAIKUFILE"/>
+    </category>
+
+
+    <category name="mondrian">
+        <priority value="INFO"/>
+        <appender-ref ref="MONDRIAN"/>
+    </category>
+
+
+    <category name="mondrian.mdx">
+        <priority value="INFO"/>
+        <appender-ref ref="MDXLOG"/>
+    </category>
+
+    <!-- ======================= -->
+    <!-- Setup the Root category -->
+    <!-- ======================= -->
+
+    <root>
+        <priority value="DEBUG"/>
+        <appender-ref ref="SAIKUCONSOLE"/>
+        <appender-ref ref="SAIKUFILE"/>
+    </root>
+
+
+</log4j:configuration>

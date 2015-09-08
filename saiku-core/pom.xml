@@ -2,14 +2,14 @@
     <parent>
         <artifactId>saiku</artifactId>
         <groupId>org.saiku</groupId>
-        <version>3.5-SNAPSHOT</version>
+        <version>3.5</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>saiku-core</artifactId>
     <packaging>pom</packaging>
     <name>saiku - core libraries</name>
-    <version>3.5-SNAPSHOT</version>
+    <version>3.5</version>
 
 
     <modules>
@@ -37,26 +37,27 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-                <!--<version>2.7</version>-->
-                <!--<configuration>-->
-                    <!--<charset>UTF-8</charset>-->
-                    <!--<docencoding>UTF-8</docencoding>-->
-                    <!--<encoding>UTF-8</encoding>-->
-                    <!--<verbose>false</verbose>-->
-                    <!--<quiet>true</quiet>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>attach-javadocs</id>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>javadoc</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <charset>UTF-8</charset>
+                    <docencoding>UTF-8</docencoding>
+                    <encoding>UTF-8</encoding>
+                    <verbose>false</verbose>
+                    <quiet>true</quiet>
+                    <failOnError>false</failOnError>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <reporting>

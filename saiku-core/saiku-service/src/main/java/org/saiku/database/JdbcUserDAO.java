@@ -31,6 +31,9 @@ public class JdbcUserDAO
 
     public JdbcUserDAO() {
         InputStream stream = loader.getResourceAsStream("../database-queries.properties");
+        if(stream == null){
+            stream = loader.getResourceAsStream("database-queries.properties");
+        }
         try {
             prop.load(stream);
         } catch (IOException e) {
@@ -121,7 +124,9 @@ public class JdbcUserDAO
 
     public void deleteUser(String username)
     {
+        String sql = prop.getProperty("deleteRoleByUserId");
         String newsql = prop.getProperty("deleteUserById");
+        getJdbcTemplate().update(sql, username);
         getJdbcTemplate().update(newsql, username);
     }
 

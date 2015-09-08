@@ -30,6 +30,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.*;
@@ -147,7 +148,7 @@ public class SessionService implements ISessionService {
 	 */
 	public void authenticate(HttpServletRequest req, String username, String password) {
 		try {
-			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+			PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(username, password);
 			token.setDetails(new WebAuthenticationDetails(req));
 			Authentication authentication = this.authenticationManager.authenticate(token);
 			log.debug("Logging in with [{}]", authentication.getPrincipal());
@@ -181,7 +182,8 @@ public class SessionService implements ISessionService {
 		if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Object p = auth.getPrincipal();
-			//createSession(auth, null, null);
+			//FIXME 研究为什么下面这行代码被注释掉了。
+			createSession(auth, null, null);
 			if (sessionHolder.containsKey(p)) {
 				Map<String,Object> r = new HashMap<String,Object>();
 				r.putAll(sessionHolder.get(p)); 

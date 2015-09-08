@@ -23,3 +23,10 @@ saiku-ui/target/
 atlassian-ide-plugin.xml
 osgitests/
 *.log
+ui-webapp/target/
+saiku-ui/.tern-port
+saiku-ui/node_modules2/
+util/earthquakes.sql
+*~
+\.tern-port
+npm-debug.log*

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
+			   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="ssoHeaderFilter"
+          class="com.bisone.saiku.interceptor.SSORequestHeaderAuthenticationFilter">
+        <property name="principalRequestHeader" value="REMOTE_USER"/>
+        <!-- fall back to other authentication providers is OAM SSO is not there -->
+        <property name="exceptionIfHeaderMissing" value="false" />
+        <!-- hard code a testUserId for local tests -->
+        <property name="testUserId" value="admin" />
+        <property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationDetailsSource">
+			<bean class="org.springframework.security.web.authentication.preauth.j2ee.J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource">
+				<property name="mappableRolesRetriever">
+					<bean class="org.springframework.security.web.authentication.preauth.j2ee.WebXmlMappableAttributesRetriever" />
+				</property>
+				<property name="userRoles2GrantedAuthoritiesMapper">
+					<bean class="org.springframework.security.core.authority.mapping.SimpleAttributes2GrantedAuthoritiesMapper">
+						<property name="convertAttributeToUpperCase" value="true"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+    </bean>
+
+    <bean id="preauthAuthProvider"
+          class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+        <property name="preAuthenticatedUserDetailsService" ref="preAuthenticatedUserDetailsService" />
+    </bean>
+
+    <!-- magically map the user header to a valid user object -->
+    <bean id="preAuthenticatedUserDetailsService"
+          class="org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService" />
+
+    <bean id="securityContextHolderAwareRequestFilter"
+          class="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter" />
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider ref="preauthAuthProvider" />
+        <!-- this is an example of alternate user authentication providers, although
+         we only have the PRE_AUTH_FILTER defined above, so it isn't used. -->
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user authorities="ROLE_USER" name="guest" password="guest" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <bean id="userDetailsService"
+          class="com.bisone.saiku.security.UserDetailsServices" />
+
+</beans>
