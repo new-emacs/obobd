@@ -31,3 +31,4 @@ util/earthquakes.sql
 \.tern-port
 npm-debug.log*
 ui-webapp/jackrabbit-repository/
+ui-webapp/logs/

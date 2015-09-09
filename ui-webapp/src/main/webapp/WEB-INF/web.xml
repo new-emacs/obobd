@@ -112,7 +112,7 @@
         <init-param>
             <param-name>resource-config</param-name>
             <!-- <param-value>/WEB-INF/config.xml</param-value> -->
-            <param-value>/WEB-INF/${repoconfigfilename}</param-value>
+            <param-value>/WEB-INF/${repoconfig}</param-value>
             <description>
                 Defines various dav-resource configuration parameters.
             </description>

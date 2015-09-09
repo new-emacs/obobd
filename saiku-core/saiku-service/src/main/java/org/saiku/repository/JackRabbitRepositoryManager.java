@@ -15,14 +15,7 @@
  */
 package org.saiku.repository;
 
-
-import org.saiku.database.dto.MondrianSchema;
-import org.saiku.datasources.connection.RepositoryFile;
-import org.saiku.service.user.UserService;
-import org.saiku.service.util.exception.SaikuServiceException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.jackrabbit.api.JackrabbitRepository;
 import org.apache.jackrabbit.api.JackrabbitSession;
@@ -32,13 +25,14 @@ import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.jackrabbit.core.RepositoryImpl;
 import org.apache.jackrabbit.core.config.RepositoryConfig;
+import org.saiku.database.dto.MondrianSchema;
+import org.saiku.datasources.connection.RepositoryFile;
+import org.saiku.service.user.UserService;
+import org.saiku.service.util.exception.SaikuServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 
 import javax.jcr.*;
 import javax.jcr.nodetype.NodeTypeExistsException;
@@ -52,6 +46,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * JackRabbit JCR Repository Manager for Saiku.
@@ -147,10 +145,21 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
     this.userService = userService;
     if (session == null) {
       log.info("starting repo");
-      String xml = config;
+
       String dir = data;
-      log.debug("sone: 配置文件==="+new File(xml).toPath().toAbsolutePath());
-      RepositoryConfig config = RepositoryConfig.create(xml, dir);
+
+      final DefaultResourceLoader loader = new DefaultResourceLoader();
+
+      log.info("配置文件【" + config + "】是否存在？" + loader.getResource("classpath:" + config).exists());
+
+      Resource resource = loader.getResource("classpath:" + config);
+
+      RepositoryConfig config = null;
+      try {
+        config = RepositoryConfig.create(resource.getURI(), dir);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
       repository = RepositoryImpl.create(config);
 
       log.info("repo started");

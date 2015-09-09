@@ -229,8 +229,8 @@
         <_jdbc.username>sone</_jdbc.username>
         <_jdbc.password>sone</_jdbc.password>
 
-        <repoconfig>/home/will/saiku/ui-webapp/src/main/webapp/WEB-INF/configuration-mysql.xml</repoconfig>
-        <repoconfigfilename>configuration-mysql.xml</repoconfigfilename>
+        <repoconfig>configuration-mysql.xml</repoconfig>
+
         <!-- <repoconfig>/home/will/backup/repository/configuration.xml</repoconfig> -->
         <repodata>/home/will/backup/repository/data</repodata>
         <foodmartrepo>/home/will/backup/data</foodmartrepo>
