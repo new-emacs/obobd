@@ -12,7 +12,7 @@
 | owebsite: http://jakarta.apache.org/log4j
 -->
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
     <!-- ================================= -->
     <!-- Preserve messages in a local file -->
@@ -146,7 +146,7 @@
     <!-- ======================= -->
 
     <root>
-        <priority value="DEBUG"/>
+        <priority value="INFO"/>
         <appender-ref ref="SAIKUCONSOLE"/>
         <appender-ref ref="SAIKUFILE"/>
     </root>

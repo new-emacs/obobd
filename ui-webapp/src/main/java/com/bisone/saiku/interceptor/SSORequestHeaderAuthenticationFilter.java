@@ -40,7 +40,6 @@ public class SSORequestHeaderAuthenticationFilter extends AbstractPreAuthenticat
 
        log.debug("获得认证信息===" + principal);
 
-        System.out.println("获得认证信息===" + principal);
 
         if (principal == null) {
             if (exceptionIfHeaderMissing) {
@@ -60,7 +59,7 @@ public class SSORequestHeaderAuthenticationFilter extends AbstractPreAuthenticat
         // also set it into the session, sometimes that's easier for jsp/faces
         // to get at..
         request.getSession().setAttribute("session_user", principal);
-        System.out.println("获得认证信息===" + principal);
+        log.debug("获得认证信息===" + principal);
         return principal;
     }
 

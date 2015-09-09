@@ -149,7 +149,7 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
       log.info("starting repo");
       String xml = config;
       String dir = data;
-      System.out.println("sone: 配置文件==="+new File(xml).toPath().toAbsolutePath());
+      log.debug("sone: 配置文件==="+new File(xml).toPath().toAbsolutePath());
       RepositoryConfig config = RepositoryConfig.create(xml, dir);
       repository = RepositoryImpl.create(config);
 
