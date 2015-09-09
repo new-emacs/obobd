@@ -230,7 +230,7 @@
         <_jdbc.password>sone</_jdbc.password>
 
         <repoconfig>configuration-mysql.xml</repoconfig>
-        <repoconfigfilename>configuration-mysql.xml</repoconfigfilename>
+
         <!-- <repoconfig>/home/will/backup/repository/configuration.xml</repoconfig> -->
         <repodata>/home/will/backup/repository/data</repodata>
         <foodmartrepo>/home/will/backup/data</foodmartrepo>
