@@ -511,7 +511,6 @@ Attribute 类似关系型数据库中的 column。 上面的例子表示[Custome
 
 name，caption和description同样适用于schema，cube，measure和dimensions。他们还有一个visible属性，用于在页面上隐藏他们，但是不会影响MDX的执行。
 | XML属性       | 组合键？ | 描述                            |
-|---------------+----------+---------------------------------|
 | keyColumn     | Yes      | 必须，属性对应的主键，必须唯一  |
 | nameColumn    | No       | 可选，指定存储该属性名称的列    |
 | orderByColumn | Yes      | 可选，按什么排序，默认按key排序 |
