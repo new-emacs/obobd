@@ -5,12 +5,12 @@
 #+STARTUP: hidestars
 
 * 目录                                                               :TOC@4:
- - [[#开始-][开始 ]]
+ - [[#开始][开始]]
    - [[#启动说明][启动说明]]
    - [[#功能说明][功能说明]]
    - [[#安装和配置开发环境][安装和配置开发环境]]
      - [[#开发工具][开发工具]]
-     - [[#数据库搭建-][数据库搭建 ]]
+     - [[#数据库搭建][数据库搭建]]
  - [[#基本概念][基本概念]]
    - [[#bi][BI]]
    - [[#olap-介绍][OLAP 介绍]]
@@ -38,6 +38,7 @@
      - [[#编写-mondrian-schema][编写 MONDRIAN SCHEMA]]
        - [[#cube][CUBE]]
        - [[#权限][权限]]
+       - [[#编写-mondrian-40-schema][编写 mondrian 4.0 Schema]]
  - [[#saiku][Saiku]]
    - [[#saiku介绍][Saiku介绍]]
      - [[#saiku用户手册][Saiku用户手册]]
@@ -68,7 +69,7 @@
    - [[#建立索引][建立索引]]
  - [[#参考资料][参考资料]]
 
-* 开始 
+* 开始
 ** 启动说明
 [2015-09-10 四 11:15]
 [2015-09-10 四 09:57]
@@ -80,7 +81,7 @@
 ** 功能说明
 
  - 使用 SRING PREAUTH 实现单点登陆
- - JACKRABBIT 使用 MYSQL 
+ - JACKRABBIT 使用 MYSQL
 
 ** 安装和配置开发环境
 *** 开发工具
@@ -90,7 +91,7 @@
 - JDK 8 & JCE
 - SCHEMA-WORKBENCH
 
-*** 数据库搭建 
+*** 数据库搭建
 [2015-09-10 四 10:25]
 使用 FOODMART DATA LOADER, 具体执行命令见： HTTPS://GITHUB.COM/OSBI/FOODMART-DATA
 * 基本概念
@@ -416,6 +417,7 @@ WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
    - HTTP://BLOG.CSDN.NET/LONGSHENLMJ/ARTICLE/CATEGORY/1850253
    - 退化维：HTTP://MONDRIAN.PENTAHO.COM/DOCUMENTATION/SCHEMA.PHP#DEGENERATE_DIMENSIONS
    - 聚合表：HTTP://MONDRIAN.PENTAHO.COM/DOCUMENTATION/AGGREGATE_TABLES.PHP
+   - 使用手册 http://wiki.meteorite.bi/display/SAIK/Using+Saiku
 
 
    MONDRIAN是一个BI开源项目。一个用JAVA写成的OLAP（在线分析性处理）引擎。它用MDX语言实现查询，从关系数据库(RDBMS)中读取数据。然后经过JAVA API用多维的方式对结果进行展示。
@@ -428,7 +430,366 @@ WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
 **** 权限
 
      权限分为两种，一种是顶一下在MONDRIAN的CUBE中。可以设置CUBE，维度和度量的权限，[[HTTPS://GITHUB.COM/STANDINO/SAIKU/BLOB/MASTER/FOODMART.XML][具体例子]] 。另一种是数据权限，这个需要编写JAVA类实现。具体例子将在下面SAIKU相关小节进行介绍。
+**** 编写 mondrian 4.0 Schema
+[2015-09-10 四 13:47]
 
+这是一个具体的例子： https://github.com/bisone/saiku/blob/master/util/FoodMart4.xml
+
+
+        +------------------------------------------------------+
+        |   Sales schema                                       |                 <Schema name= 'Sales' ...>
+        |                                                      |
+        |                                                      |
+        |      +--------------------------------------------+  |
+        |      |  Sales Cube                                |  |                    <Cube name= 'Sales' ...>
+        |      |                                            |  |
+        |      |            Dimensions                      |  |                     <Dimension name= 'Time' ...>
+        |      |         +-------------+        +---------+ |  |
+        |      |         | Time        |        | Customer| |  |
+        |      |         |             |        |         | |  |
+        |      |         |   Year      |        | Edu     | |  |                      <Attribute name= 'Year' .../>
+        |      |         |   Month     |        | Name    | |  |                      <Attribute name= 'Month' .../>
+        |      |         |   Day       |        |         | |  |                      <Attribute name= 'Day' .../>
+        |      |         |             |        |         | |  |                     <Dimension>
+        |      |         |             |        |         | |  |                     <Dimension name= 'Customer' ...>
+        |      |         +-------------+        +---------+ |  |                       <Attribute name= 'Education' .../>
+        |      |                                            |  |                       <Attribute name= 'Name' .../>
+        |      |                                            |  |                     <Dimension>
+        |      |    Measures                                |  |                     ...
+        |      |    +-----------------+                     |  |
+        |      |    | Unit Sales      |                     |  |                     <Measure name= 'Unit Sales' .../>
+        |      |    |                 |                     |  |                     <Measure name= 'Store Sales' .../>
+        |      |    +-----------------+                     |  |                     </Cube>
+        |      |    +-----------------+                     |  |                     </Schema>
+        |      |    |     Store Sales |                     |  |
+        |      |    +-----------------+                     |  |
+        |      +---------------+-------------+--------------+  |
+        |                                                      |
+        +------------------------------------------------------+
+
+
+
+***** Schema element
+[2015-09-10 四 14:31]
+
+#+begin_src xml
+<Schema name="FoodMart"
+caption="FoodMart"
+description="FoodMart"
+metamodelVersion="4.0" measuresCaption="Measures"
+defaultRole="Associate" missingLink="warning">
+#+end_src
+
+***** Cube element 
+[2015-09-10 四 14:24]
+ Cube 是多维分析立方体的简称。Cube可以看做是一个坐标系，每个Dimension是坐标，多个坐标确定一个点，这个点就是Cube的 Cell。我们主要是关系这写Cell所对应的数值。
+
+[[http://pic002.cnblogs.com/images/2012/222972/2012021622190415.png]]
+
+Cube 主要包括维度（Dimensions）和度量分组(MeasureGroups)
+
+#+begin_src xml
+<Cube name='Sales' defaultMeasure='Unit Sales'>
+        <Dimensions>
+           ...
+        </Dimensions>
+
+        <MeasureGroups>
+           ...
+        </MeasureGroups>
+</Cube>
+#+end_src
+****** Attribute element
+[2015-09-10 四 15:32]
+#+begin_src xml
+<Attribute name="Education" caption="Education level"
+description="The education level of this customer"
+keyColumn="education"/>
+<Attribute name="Name" keyColumn="customer_id" nameColumn="full_name"/>
+#+end_src
+Attribute 类似关系型数据库中的 column。 上面的例子表示[Customer]维度里的[Education]和[Name]两个Attribute。 Attribute 中必须含有 name；caption和description是可选的。name和caption类似，但是用途不同。caption的值是用来显示在界面上的，name是在MDX代码中使用的。Caption还可以用于国际化。Descriptions的内容显示在页面的tooltips里。
+
+name，caption和description同样适用于schema，cube，measure和dimensions。他们还有一个visible属性，用于在页面上隐藏他们，但是不会影响MDX的执行。
+| XML属性       | 组合键？ | 描述                            |
+|---------------+----------+---------------------------------|
+| keyColumn     | Yes      | 必须，属性对应的主键，必须唯一  |
+| nameColumn    | No       | 可选，指定存储该属性名称的列    |
+| orderByColumn | Yes      | 可选，按什么排序，默认按key排序 |
+| captionColumn | Yes      | 可选，默认值是name的值。        |
+
+****** Measure element
+度量一定是数字，存在于cell中。这个值可以是事实表中多个列的和(sum)。
+#+begin_src xml
+                 <Measures>
+                    <Measure name='Unit Sales' column='unit_sales' aggregator='sum' formatString='Standard'/>
+                    <Measure name='Store Cost' column='store_cost' aggregator='sum' formatString='#,###.00'/>
+                    <Measure name='Store Sales' column='store_sales' aggregator='sum' formatString='#,###.00'/>
+                    <Measure name='Sales Count' column='product_id' aggregator='count' formatString='#,###'/>
+                    <Measure name='Customer Count' column='customer_id' aggregator='distinct-count' formatString='#,###'/>
+                    <Measure name='Promotion Sales' column='promotion_sales' aggregator='sum' formatString='#,###.00' datatype='Numeric'/>
+                </Measures>
+#+end_src
+****** 完整的例子
+#+begin_src xml
+    <Cube name='Sales' defaultMeasure='Unit Sales'>
+        <!-- Use annotations to provide translations of this cube's caption and
+             description into German and French. Use of annotations in this
+             manner is experimental and unsupported; just for testing right
+             now. -->
+        <Annotations>
+            <Annotation name='caption.de_DE'>Verkaufen</Annotation>
+            <Annotation name='caption.fr_FR'>Ventes</Annotation>
+            <Annotation name='caption+fr_FR'>Ventes</Annotation>
+            <Annotation name='description.fr_FR'>Cube des ventes</Annotation>
+            <Annotation name='description.de'>Cube Verkaufen</Annotation>
+            <Annotation name='description.de_AT'>Cube den Verkaufen</Annotation>
+        </Annotations>
+
+        <Dimensions>
+
+            <Dimension source='Store'/>
+
+            <Dimension source='Time'/>
+
+            <Dimension source='Product'/>
+
+            <Dimension name='Promotion' table='promotion' key='Promotion Id'>
+                <Attributes>
+                    <Attribute name='Promotion Id' keyColumn='promotion_id' hasHierarchy='false'/>
+                    <Attribute name='Promotion Name' keyColumn='promotion_name' hasHierarchy='false'/>
+                    <Attribute name='Media Type' keyColumn='media_type' hierarchyAllMemberName='All Media' hasHierarchy='false'/>
+                </Attributes>
+                <Hierarchies>
+                    <Hierarchy name='Media Type' allMemberName='All Media'>
+                        <Level attribute='Media Type'/>
+                    </Hierarchy>
+                    <Hierarchy name='Promotions' allMemberName='All Promotions'>
+                        <Level attribute='Promotion Name'/>
+                    </Hierarchy>
+                </Hierarchies>
+            </Dimension>
+
+            <Dimension name='Customer' table='customer' key='Name'>
+                <Attributes>
+                    <Attribute name='Country' keyColumn='country' hasHierarchy='false'/>
+                    <Attribute name='State Province' hasHierarchy='false'>
+                        <Key>
+                            <Column name='country'/>
+                            <Column name='state_province'/>
+                        </Key>
+                        <Name>
+                            <Column name='state_province'/>
+                        </Name>
+                    </Attribute>
+                    <Attribute name='City' hasHierarchy='false'>
+                        <Key>
+                            <Column name='country'/>
+                            <Column name='state_province'/>
+                            <Column name='city'/>
+                        </Key>
+                        <Name>
+                            <Column name='city'/>
+                        </Name>
+                    </Attribute>
+                    <Attribute name='Name' keyColumn='customer_id' nameColumn='full_name' orderByColumn='full_name' hasHierarchy='false'/>
+                    <Attribute name='Gender' keyColumn='gender' datatype="Boolean"/>
+                    <Attribute name='Marital Status' keyColumn='marital_status' approxRowCount='111'/>
+                    <Attribute name='Education' keyColumn='education' hasHierarchy='false'/>
+                    <Attribute name='Yearly Income' keyColumn='yearly_income' hierarchyAllMemberName='All Yearly Incomes'/>
+                </Attributes>
+
+                <Hierarchies>
+                    <Hierarchy name='Customers' allMemberName='All Customers'>
+                        <Level attribute='Country'/>
+                        <Level attribute='State Province'/>
+                        <Level attribute='City'/>
+                        <Level attribute='Name'/>
+                    </Hierarchy>
+                    <Hierarchy name='Education Level'>
+                        <Level attribute='Education' name='Education Level'/>
+                    </Hierarchy>
+                </Hierarchies>
+            </Dimension>
+        </Dimensions>
+
+        <MeasureGroups>
+            <MeasureGroup name='Sales' table='sales_fact_1997'>
+                <Measures>
+                    <Measure name='Unit Sales' column='unit_sales' aggregator='sum' formatString='Standard'/>
+                    <Measure name='Store Cost' column='store_cost' aggregator='sum' formatString='#,###.00'/>
+                    <Measure name='Store Sales' column='store_sales' aggregator='sum' formatString='#,###.00'/>
+                    <Measure name='Sales Count' column='product_id' aggregator='count' formatString='#,###'/>
+                    <Measure name='Customer Count' column='customer_id' aggregator='distinct-count' formatString='#,###'/>
+                    <Measure name='Promotion Sales' column='promotion_sales' aggregator='sum' formatString='#,###.00' datatype='Numeric'/>
+                </Measures>
+                <DimensionLinks>
+                    <ForeignKeyLink dimension='Store' foreignKeyColumn='store_id'/>
+                    <ForeignKeyLink dimension='Time' foreignKeyColumn='time_id'/>
+                    <ForeignKeyLink dimension='Product' foreignKeyColumn='product_id'/>
+                    <ForeignKeyLink dimension='Promotion' foreignKeyColumn='promotion_id'/>
+                    <ForeignKeyLink dimension='Customer' foreignKeyColumn='customer_id'/>
+                </DimensionLinks>
+            </MeasureGroup>
+            <MeasureGroup table='agg_c_special_sales_fact_1997' type='aggregate'>
+                <Measures>
+                    <MeasureRef name='Fact Count' aggColumn='fact_count'/>
+                    <MeasureRef name='Unit Sales' aggColumn='unit_sales_sum'/>
+                    <MeasureRef name='Store Cost' aggColumn='store_cost_sum'/>
+                    <MeasureRef name='Store Sales' aggColumn='store_sales_sum'/>
+                </Measures>
+                <DimensionLinks>
+                    <ForeignKeyLink dimension='Store' foreignKeyColumn='store_id'/>
+                    <ForeignKeyLink dimension='Product' foreignKeyColumn='product_id'/>
+                    <ForeignKeyLink dimension='Promotion' foreignKeyColumn='promotion_id'/>
+                    <ForeignKeyLink dimension='Customer' foreignKeyColumn='customer_id'/>
+                    <CopyLink dimension='Time' attribute='Month'>
+                        <Column aggColumn='time_year' table='time_by_day' name='the_year'/>
+                        <Column aggColumn='time_quarter' table='time_by_day' name='quarter'/>
+                        <Column aggColumn='time_month' table='time_by_day' name='month_of_year'/>
+                    </CopyLink>
+                </DimensionLinks>
+            </MeasureGroup>
+            <MeasureGroup table='agg_l_05_sales_fact_1997' type='aggregate'>
+                <Measures>
+                    <MeasureRef name='Fact Count' aggColumn='fact_count'/>
+                    <MeasureRef name='Unit Sales' aggColumn='unit_sales'/>
+                    <MeasureRef name='Store Cost' aggColumn='store_cost'/>
+                    <MeasureRef name='Store Sales' aggColumn='store_sales'/>
+                </Measures>
+                <DimensionLinks>
+                    <ForeignKeyLink dimension='Store' foreignKeyColumn='store_id'/>
+                    <ForeignKeyLink dimension='Product' foreignKeyColumn='product_id'/>
+                    <ForeignKeyLink dimension='Promotion' foreignKeyColumn='promotion_id'/>
+                    <ForeignKeyLink dimension='Customer' foreignKeyColumn='customer_id'/>
+                    <NoLink dimension='Time'/>
+                </DimensionLinks>
+            </MeasureGroup>
+            <MeasureGroup table='agg_c_14_sales_fact_1997' type='aggregate'>
+                <Measures>
+                    <MeasureRef name='Fact Count' aggColumn='fact_count'/>
+                    <MeasureRef name='Unit Sales' aggColumn='unit_sales'/>
+                    <MeasureRef name='Store Cost' aggColumn='store_cost'/>
+                    <MeasureRef name='Store Sales' aggColumn='store_sales'/>
+                </Measures>
+                <DimensionLinks>
+                    <ForeignKeyLink dimension='Store' foreignKeyColumn='store_id'/>
+                    <ForeignKeyLink dimension='Product' foreignKeyColumn='product_id'/>
+                    <ForeignKeyLink dimension='Promotion' foreignKeyColumn='promotion_id'/>
+                    <ForeignKeyLink dimension='Customer' foreignKeyColumn='customer_id'/>
+                    <CopyLink dimension='Time' attribute='Month'>
+                        <Column aggColumn='the_year' table='time_by_day' name='the_year'/>
+                        <Column aggColumn='quarter' table='time_by_day' name='quarter'/>
+                        <Column aggColumn='month_of_year' table='time_by_day' name='month_of_year'/>
+                    </CopyLink>
+                </DimensionLinks>
+            </MeasureGroup>
+            <MeasureGroup table='agg_g_ms_pcat_sales_fact_1997' type='aggregate'>
+                <Measures>
+                    <MeasureRef name='Fact Count' aggColumn='fact_count'/>
+                    <MeasureRef name='Unit Sales' aggColumn='unit_sales'/>
+                    <MeasureRef name='Store Cost' aggColumn='store_cost'/>
+                    <MeasureRef name='Store Sales' aggColumn='store_sales'/>
+                    <MeasureRef name='Customer Count' aggColumn='customer_count'/>
+                </Measures>
+                <DimensionLinks>
+                    <NoLink dimension='Store'/>
+                    <CopyLink dimension='Product'>
+                        <Column aggColumn='product_family' table='product_class' name='product_family'/>
+                        <Column aggColumn='product_department' table='product_class' name='product_department'/>
+                        <Column aggColumn='product_category' table='product_class' name='product_category'/>
+                    </CopyLink>
+                    <NoLink dimension='Promotion'/>
+                    <CopyLink dimension='Customer'>
+                        <Column aggColumn='gender' table='customer' name='gender'/>
+                        <Column aggColumn='marital_status' table='customer' name='marital_status'/>
+                    </CopyLink>
+                    <CopyLink dimension='Time' attribute='Month'>
+                        <Column aggColumn='the_year' table='time_by_day' name='the_year'/>
+                        <Column aggColumn='quarter' table='time_by_day' name='quarter'/>
+                        <Column aggColumn='month_of_year' table='time_by_day' name='month_of_year'/>
+                    </CopyLink>
+                </DimensionLinks>
+            </MeasureGroup>
+        </MeasureGroups>
+
+        <CalculatedMembers>
+            <CalculatedMember name='Profit' dimension='Measures'>
+            <Formula>[Measures].[Store Sales] - [Measures].[Store Cost]</Formula>
+                <CalculatedMemberProperty name="FORMAT_STRING" expression="Iif(([Measures].[Store Sales]) &lt; 10000, '|(#,##0.00 &#8364;)|style=red', '|#,##0.00 &#8364;|style=green')"/>
+            </CalculatedMember>
+            <CalculatedMember name='Profit last Period' dimension='Measures'
+                    formula='COALESCEEMPTY((Measures.[Profit], [Time].[Time].PREVMEMBER),    Measures.[Profit])'
+                    visible='false'>
+                <CalculatedMemberProperty name='FORMAT_STRING' value='$#,##0.00'/>
+            </CalculatedMember>
+            <CalculatedMember name='Profit Growth' dimension='Measures'
+                    formula='([Measures].[Profit] - [Measures].[Profit last Period]) / [Measures].[Profit last Period]'
+                    visible='true' caption='Gewinn-Wachstum'>
+                <CalculatedMemberProperty name='FORMAT_STRING' value='0.0%'/>
+            </CalculatedMember>
+        </CalculatedMembers>
+    </Cube>
+
+
+#+end_src
+***** PhysicalSchema element
+
+这个元素表述数据库中实际的表和列。
+
+#+begin_src xml
+    <PhysicalSchema>
+        <Table name='salary'/>
+        <Table name='salary' alias='salary2'/>
+        <Table name='department'>
+            <Key>
+                <Column name='department_id'/>
+            </Key>
+        </Table>
+        <Table name='employee'>
+            <Key>
+                <Column name='employee_id'/>
+            </Key>
+        </Table>
+        <Table name='employee_closure'>
+            <Key>
+                <Column name='employee_id'/>
+            </Key>
+        </Table>
+     </PhysicalSchema>
+ 
+#+end_src
+
+上例中的salary表是事实表不需要主键； department是维度表，需要指定主键。
+
+ #+begin_src xml
+ <Table name='sales_fact_1997'>
+            <ColumnDefs>
+                <CalculatedColumnDef name='promotion_sales'>
+                    <ExpressionView>
+                        <SQL dialect='access'>
+                            Iif(<Column table='sales_fact_1997' name='promotion_id'/> = 0, 0,
+                            <Column table='sales_fact_1997' name='store_sales'/>)
+                        </SQL>
+                    <SQL dialect='generic'>
+                        case when <Column table='sales_fact_1997' name='promotion_id'/> = 0 then 0
+                        else <Column table='sales_fact_1997' name='store_sales'/> end
+                    </SQL>
+                    </ExpressionView>
+                </CalculatedColumnDef>
+            </ColumnDefs>
+        </Table>
+ #+end_src 
+上面实例显示如何自定义列定义。
+
+#+begin_src xml
+<Query alias='canadian_customer'>
+<SQL>
+SELECT *
+FROM sales.customer
+WHERE country = 'Canada'
+</SQL>
+</Query>
+#+end_src
 
 * Saiku
 
@@ -824,7 +1185,7 @@ public class RedisSegmentCache implements SegmentCache{
  - [[http://www.joyofdata.de/blog/setting-up-a-time-dimension-table-in-mysql/][SQL脚本插入时间维度表数据]]
 
 下面看的几个比较好的Mysql优化介绍：
-- http://www.cnblogs.com/hustcat/archive/2009/10/28/1591648.html 
+- http://www.cnblogs.com/hustcat/archive/2009/10/28/1591648.html
 - http://www.cnitblog.com/aliyiyi08/archive/2008/09/09/48878.html  （执行计划说明）
 - http://tech.meituan.com/mysql-index.html （美团网一个技术人员写的，个人觉得写的非常好）
 
@@ -861,7 +1222,6 @@ public class RedisSegmentCache implements SegmentCache{
  - [[http://www.blogjava.net/qileilove/archive/2012/04/23/376353.html][定时备份mysql数据库 并删除7天前的备份 （windows linux ）]]
  - [[http://blog.csdn.net/jinkelei/article/details/6833997][mysql定时备份和删除]]
  - [[http://my.oschina.net/zimingforever/blog/91287][mysql删除大表的部分数据]]
-    
+
    1. [[http://blog.sbeynon.net/2011/12/spring-security-with-sso-headers.html][Spring Security with SSO Headers - integrating with OAM WebGate]]
    2. [[http://www.blogjava.net/youxia/archive/2008/12/07/244883.html][SpringSide 3 中的安全框架]]
-
