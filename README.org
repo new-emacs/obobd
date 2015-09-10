@@ -1,0 +1,867 @@
+#+OPTIONS:     H:3 num:nil toc:t \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
+#+DESCRIPTION: 使用saiku开发OLAP系统
+#+STARTUP: showall
+#+STARTUP: indent
+#+STARTUP: hidestars
+
+* 目录                                                               :TOC@4:
+ - [[#开始-][开始 ]]
+   - [[#启动说明][启动说明]]
+   - [[#功能说明][功能说明]]
+   - [[#安装和配置开发环境][安装和配置开发环境]]
+     - [[#开发工具][开发工具]]
+     - [[#数据库搭建-][数据库搭建 ]]
+ - [[#基本概念][基本概念]]
+   - [[#bi][BI]]
+   - [[#olap-介绍][OLAP 介绍]]
+       - [[#逻辑概念][逻辑概念]]
+       - [[#星形结构][星形结构]]
+   - [[#mdx][MDX]]
+     - [[#函数][函数]]
+       - [[#addcalculatedmembers][ADDCALCULATEDMEMBERS]]
+       - [[#aggregate-（计算一段时间内总和）][AGGREGATE （计算一段时间内总和）]]
+       - [[#ancestor][ANCESTOR]]
+       - [[#ancestors][ANCESTORS]]
+       - [[#ascendants][ASCENDANTS]]
+       - [[#lag当前时间的前29天数据][LAG当前时间的前29天数据]]
+       - [[#cousin][COUSIN]]
+       - [[#prevmember][PREVMEMBER]]
+       - [[#order排序][ORDER(排序)]]
+       - [[#topcount][TOPCOUNT]]
+       - [[#subset（）][SUBSET（）]]
+       - [[#periodstodate][PERIODSTODATE]]
+       - [[#parallelperiod][PARALLELPERIOD]]
+       - [[#sum][SUM]]
+       - [[#topsum（前几名加和）][TOPSUM（前几名加和）]]
+       - [[#求占比：][求占比：]]
+ - [[#mondrian-介绍][MONDRIAN 介绍]]
+     - [[#编写-mondrian-schema][编写 MONDRIAN SCHEMA]]
+       - [[#cube][CUBE]]
+       - [[#权限][权限]]
+ - [[#saiku][Saiku]]
+   - [[#saiku介绍][Saiku介绍]]
+     - [[#saiku用户手册][Saiku用户手册]]
+       - [[#选择报表][选择报表]]
+       - [[#添加维度][添加维度]]
+       - [[#执行查询][执行查询]]
+       - [[#交换数轴][交换数轴]]
+       - [[#排序][排序]]
+       - [[#筛选][筛选]]
+       - [[#保存报表][保存报表]]
+       - [[#打开已保存的报表][打开已保存的报表]]
+       - [[#生成图表][生成图表]]
+       - [[#钻取][钻取]]
+     - [[#saiku-基本配置][Saiku 基本配置]]
+     - [[#saiku-插件编写][saiku 插件编写]]
+     - [[#嵌入式图表的使用][嵌入式图表的使用]]
+       - [[#使用保存的query][使用保存的query]]
+       - [[#使用mdx查询][使用mdx查询]]
+       - [[#相关代码][相关代码]]
+   - [[#单点登录][单点登录]]
+     - [[#基本思路][基本思路]]
+ - [[#引入-redis-缓存][引入 redis 缓存]]
+   - [[#下面是两个缓存的例子，分别用内存和cdc作为缓存][下面是两个缓存的例子，分别用内存和cdc作为缓存]]
+   - [[#实现mondrian-缓存的步骤如下：][实现mondrian 缓存的步骤如下：]]
+   - [[#基于redis-的-mondrian-缓存实现][基于redis 的 mondrian 缓存实现]]
+ - [[#spark-sql][spark SQL]]
+ - [[#mysql][mysql]]
+   - [[#建立索引][建立索引]]
+ - [[#参考资料][参考资料]]
+
+* 开始 
+** 启动说明
+[2015-09-10 四 11:15]
+[2015-09-10 四 09:57]
+
+
+执行 ./SAIKU JETTY 命令， 然后访问 HTTP://LOCALHOST:9988
+
+
+** 功能说明
+
+ - 使用 SRING PREAUTH 实现单点登陆
+ - JACKRABBIT 使用 MYSQL 
+
+** 安装和配置开发环境
+*** 开发工具
+[2015-09-10 四 10:24]
+
+- NODEJS: HTTPS://NODEJS.ORG/
+- JDK 8 & JCE
+- SCHEMA-WORKBENCH
+
+*** 数据库搭建 
+[2015-09-10 四 10:25]
+使用 FOODMART DATA LOADER, 具体执行命令见： HTTPS://GITHUB.COM/OSBI/FOODMART-DATA
+* 基本概念
+** BI
+
+  - 简单的方案是报表系统
+  - 深一个层次的商业智能是多维数据分析（OLAP）
+  - 更深层次是数据挖掘（DATA MINING）
+
+** OLAP 介绍
+
+ONLINE ANALYTICAL PROCESSING(OLAP)即 联机分析处理 。
+
+联机分析处理（OLAP）系统是数据仓库系统最主要的应用，专门设计用于支持复杂的分析操作，侧重对决策人员和高层管理人员的决策支持，可以根
+据分析人员的要求快速、灵活地进行大数据量的复杂查询处理，并且以一种直观而易懂的形式将查询结果提供给决策人员，以便他们准确掌握企业
+（公司）的经营状况，了解对象的需求，制定正确的方案。
+
+**** 逻辑概念
+
+    1. 维（DIMENSION）：是人们观察数据的特定角度，是考虑问题时的一类属性，属性集合构成一个维（时间维、地理维等）。
+    2. 维的层次（LEVEL）：人们观察数据的某个特定角度（即某个维）还可以存在细节程度不同的各个描述方面（时间维：日期、月份、季度、年）。
+    3. 维的成员（MEMBER）：维的一个取值，是数据项在某维中位置的描述。（“某年某月某日”是在时间维上位置的描述）。
+    4. 度量（MEASURE）：多维数组的取值。（2000年1月，上海，笔记本电脑，0000）。
+    5. OLAP的基本多维分析操作有钻取（DRILL-UP和DRILL-DOWN）、切片（SLICE）和切块（DICE）、以及旋转（PIVOT）等。
+    - 钻取：是改变维的层次，变换分析的粒度。它包括向下钻取（DRILL-DOWN）和向上钻取（DRILL-UP）/上卷(ROLL-UP)。DRILL-UP是在某一维上
+      将低层次的细节数据概括到高层次的汇总数据，或者减少维数；而DRILL-DOWN则相反，它从汇总数据深入到细节数据进行观察或增加新维。
+    - 切片和切块：是在一部分维上选定值后，关心度量数据在剩余维上的分布。如果剩余的维只有两个，则是切片；如果有三个或以上，则是切块。
+    - 旋转：是变换维的方向，即在表格中重新安排维的放置（例如行列互换）。
+
+**** 星形结构
+
+事实(FACT)和维(DIMENSION)
+
+当我们观察数据时，通常想察看聚合数据的某种顺序。这些数据叫做度量(MEASURE)。度量就是可以度量和相加的数值。比如销售金额就是一种度量，
+每个订单都有销售金额。假设每天销售20个产品，每个5美元，销售总额就是100美元。销售金额就是我们想关注的一种度量。此外我们可能还想知道
+当天的顾客数，是5位顾客一共买了20个产品，还是1位顾客买了所有的20个产品呢？销售金额和顾客数量就是我们想关注的两个度量。
+
+仅仅关心度量还不够。我们观察度量的时候都需要”BY”条件。这些”BY”条件就叫做维(DIMENSION)。讨论销售金额的时候，总要指定是某一天，
+某个季度或者某年的销售金额。几乎我们关心的任何度量都离不开时间维。我们可能还想按照产品名称或者产品类型查看销售金额，这些条件都要对
+应到相应的维上。
+
+由上可知，设计星型数据库的时候，我们首先要确定我们想看什么信息(确定度量)，如何看这些信息(确定维)。
+
+
+当我们开始创建维表的时候，有一些规则要牢记在心。第一，所有维表都要有一个基于单列的主键。这一主键列通常只是一标识列，包含自动递增的
+数值，并没有真正的含义。有含义的信息都在其他列中，这些列包含了我们要查看的所有描述信息。比如在产品维中，包含了产品描述、类别、子类
+等等。这些字段不能用来作为连接字段和其他表关联，但是包含了产品的所有描述信息。维表通常都比较胖，因为字段都比较多，每一字段都比较宽
+
+创建事实表(FACT TABLE)
+事实表存放度量(MEASURE)信息，或者称事实(FACT)信息。度量是根据各个维计算出来的一些数值。比如说销售金额是个数值，我们可以按产品、安
+类型查看总数，可以查看任何时间段的所有总数。跟维表的又矮又胖相比，事实表一般显得又高又瘦。事实表很高，是因为他们拥有的记录数一般都
+很巨大。
+
+3NF 为了减少冗余，适用于下面的场景
+- 多用户并发读写数据：把相似数据放在一起，抽取相同数据，减少重复，这样就可以使用户在一个很小的结果集上进行操作，避免数据冲突，或者
+  争夺锁的问题。
+- 只访问少数数据：例如在一个HR系统里，很少情况会更新所有人的名字，通常是找到一个人，修改他的名字。
+- 访问通过外键关联的很少的结果集：因为数据量少，查询的COST较少。
+
+星型结构的好处：
+- 维度表数据量少，小表关联大表，数据库对这样的 SQL 有很好的优化能力。
+- 用 SQL 语句查询星型结构的表，比较简单；不需要考虑太多的关联关系。
+
+** MDX
+      - [[HTTP://MSDN.MICROSOFT.COM/EN-US/LIBRARY/AA216767(SQL.80).ASPX][MDX OVERVIEW]]
+      - [[HTTP://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS146052.ASPX][MDX 中文文档]]
+      - [[HTTP://JIM19770812.BLOGSPOT.COM/2009/04/MONDRIAN-SCHEMA-WORKBENCHMDX.HTML][使用MONDRIAN SCHEMA WORKBENCH调试MDX]]
+      - [[HTTPS://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS144785.ASPX]]
+
+#+BEGIN_SRC
+
+SELECT
+NON EMPTY {HIERARCHIZE({[MEASURES].[已结算金额]})} ON COLUMNS,
+NON EMPTY {HIERARCHIZE({{[TIME.按周统计].[18], [TIME.按周统计].[19], [TIME.按周统计].[20], [TIME.按周统计].[21]}})} ON ROWS
+FROM [MONEY_REPORT]
+
+#+END_SRC
+
+    SELECT 子句，用于确定 MDX SELECT 语句的查询轴。 有关在 SELECT 子句中构造查询轴的详细信息，请参阅指定查询轴的内容 (MDX)。
+
+    用于确定将要查询的多维数据集的 FROM 子句。 有关 FROM 子句的详细信息，请参阅 SELECT 语句 (MDX)。
+
+    可选的 WHERE 子句，用于确定在切片器轴上使用哪些成员或元组来限制返回的数据。 有关在 WHERE 子句中构造切片器轴的详细信息，请参阅指定切片器轴的内容 (MDX)。
+
+每个查询轴具有一个编号：零 (0) 表示 X 轴，1 表示 Y 轴，2 表示 Z 轴，依此类推。 在 <SELECT QUERY AXIS CLAUSE> 的语法中，
+INTEGER_EXPRESSION 值指定了轴编号。 MDX 查询最多可以指定 128 个轴，但几乎没有 MDX 查询会用到 5 个以上的轴。 对于前 5 个轴，也可以
+改为使用 COLUMNS、ROWS、PAGES、SECTIONS 和 CHAPTERS 别名。
+
+MDX 查询无法跳过查询轴。 也就是说，包括一个或多个查询轴的查询不能排除编号较低的轴或中间轴。 例如，查询不能有 ROWS 轴而无 COLUMNS
+轴，或有 COLUMNS 和 PAGES 轴而无 ROWS 轴。 在集定义前面使用的 NON EMPTY 关键字提供了一种简便方法，从轴中删除所有空元组。
+
+ HIERARCHIZE 函数按层次结构的顺序组织指定集中的成员。 此函数始终保留重复项。
+
+    如果未指定 POST，则此函数按自然顺序对一定级别的成员进行排序。 如果未指定其他排序条件，则成员的自然顺序就是它们在层次结构中的默认排序顺序。 子成员会紧跟在它们的父成员之后。
+
+    如果指定了 POST，则 HIERARCHIZE 函数按非自然顺序对一定级别的成员进行排序。 也就是说，子成员优先于他们的父级。
+
+可以使用 HAVING 子句基于特定条件筛选某个轴的内容；它没有可获得相同结果的其他方法（如 FILTER 函数）灵活，但使用起来更简单一些。 下
+面的示例仅返回 INTERNET SALES AMOUNT 大于 $15,000 的日期：
+
+#+BEGIN_SRC
+SELECT {[MEASURES].[INTERNET SALES AMOUNT]}
+ON COLUMNS,
+NON EMPTY
+{[DATE].[CALENDAR].[DATE].MEMBERS}
+HAVING [MEASURES].[INTERNET SALES AMOUNT]>15000
+ON ROWS
+FROM [ADVENTURE WORKS]
+#+END_SRC
+[[HTTPS://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS146047.ASPX][切片器轴是]]在 MDX 中 SELECT 语句的 WHERE 子句中定义的。与 SQL 中的 WHERE 子句不同，MDX SELECT 语句的 WHERE 子句不从直接筛选针对查询
+行轴返回的内容。 若要筛选查询行或列轴上显示的内容，请使用多种 MDX 函数，例如 FILTER、NONEMPTY 和 TOPCOUNT。
+如果您要使用来自同一层次结构的多个成员，您需要在 WHERE 子句中包括一个集。 例如，以下查询说明了针对在 CATEGORY BIKES 中购买了产品并
+居住在美国或英国的客户的所有日历年的 INTERNET SALES AMOUNT 值：
+#+BEGIN_SRC
+SELECT {[MEASURES].[INTERNET SALES AMOUNT]} ON COLUMNS,
+[DATE].[CALENDAR YEAR].MEMBERS ON ROWS
+FROM [ADVENTURE WORKS]
+WHERE(
+{[CUSTOMER].[CUSTOMER GEOGRAPHY].[COUNTRY].&[UNITED STATES]
+, [CUSTOMER].[CUSTOMER GEOGRAPHY].[COUNTRY].&[UNITED KINGDOM]}
+, [PRODUCT].[CATEGORY].&[1])
+#+END_SRC
+如上所述，如果使用 WHERE 子句的集，则会 隐式聚合该集中的所有成员的值。 在这种情况下，该查询说明了在每个单元中的美国和英国的聚合的值。
+CROSSJOIN 函数返回两个或更多指定集的叉积。 所得集中元组的顺序取决于要联接的集的顺序以及其成员的顺序。 例如，如果第一个集由 {X1, X2,...,XN} 组成，第二个集由 {Y1, Y2, ..., YN} 组成，则这两个集的叉积为：
+#+BEGIN_SRC
+{(X1, Y1), (X1, Y2),...,(X1, YN), (X2, Y1), (X2, Y2),...,
+
+(X2, YN),..., (XN, Y1), (XN, Y2),..., (XN, YN)}
+#+END_SRC
+
+*** 函数
+
+**** [[HTTPS://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS146077.ASPX][ADDCALCULATEDMEMBERS]]
+返回通过将计算成员添加到指定集而生成的集, 市场行情统计的例子，可以在SAIKU中执行查看结果。
+#+BEGIN_SRC
+SELECT
+NON EMPTY {HIERARCHIZE({[商品品牌.品类品牌].[二级品类].MEMBERS,[商品品牌.品类品牌].[三级品类].MEMBERS})} ON COLUMNS,
+NON EMPTY {ADDCALCULATEDMEMBERS(HIERARCHIZE({[MEASURES].[UV]}))} ON ROWS
+FROM [MARKETQUOTATIONCOUNT]
+
+#+END_SRC
+
+
+**** AGGREGATE （计算一段时间内总和）
+#+BEGIN_SRC
+
+WITH MEMBER MEASURES.[总] AS
+AGGREGATE
+   (    [时间.年周].[2014].[46]: [时间.年周].[2014].[47]       )
+SELECT
+NON EMPTY {HIERARCHIZE({[MEASURES].[总],[MEASURES].[超期采购单数量]})} ON 1
+FROM [PURCHASETHEMEAREA]
+#+END_SRC
+1、[MEASURES].[总] 46 – 47 总数
+2、[MEASURES].[ 超期采购单数量] 所有的日期总数
+
+**** [[HTTPS://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS145616.ASPX][ANCESTOR]]
+此函数返回指定成员在指定级别或距离处的祖先。 如果指定了距离，则 ANCESTOR 函数返回层次结构中比成员表达式高出指定步骤数的指定成员的
+祖先。 可以将成员指定为属性层次结构的成员或用户定义层次结构的成员，有时还可以指定为父子层次结构的成员。 数值 1 返回成员的父成员，
+数值 2 返回成员的祖父成员（如果存在）。 数值 0 返回成员本身。
+由于第二参数是2，则返回的是2014 第四季度的数据
+#+BEGIN_SRC
+ANCESTOR (
+        [时间.年季月日].[2014].[4].[11].[12],2
+        )
+
+
+#+END_SRC
+**** ANCESTORS
+执行对个ANCESTOR结果集
+#+BEGIN_SRC
+    ANCESTORS (
+        [时间.年季月日].[2014].[4].[11].[12],1
+    ),
+    ANCESTORS (
+        [时间.年季月日].[2014].[4].[11].[12],2
+    ),
+    ANCESTORS (
+        [时间.年季月日].[2014].[4].[11].[12],3
+)
+
+#+END_SRC
+**** ASCENDANTS
+       返回5列数据 日 月 季度 年 全部 成阶梯状
+SELECT
+ASCENDANTS (
+    [时间.年季月日].[2014].[4].[11].[12]
+)  ON COLUMNS
+FROM [THEMEAREA]
+**** LAG当前时间的前29天数据
+#+BEGIN_SRC
+WITH
+MEMBER [MEASURES].[30天前销量] AS
+SUM( [时间.年季月日].[日].CURRENTMEMBER.LAG(29),  [MEASURES].[销量]  )
+SELECT
+    {        [MEASURES].[30天前销量] }  ON COLUMNS,
+   {  [时间.年季月日].[2014].[2].[6].[15]   } ON ROWS
+FROM [MARKETQUOTATIONCOUNT]
+#+END_SRC
+**** COUSIN
+返回在父成员下方与指定子成员具有相同的相对位置的子成员
+现货率同比
+#+BEGIN_SRC
+WITH
+  MEMBER MEASURES.[现货率同比] AS
+    ( [MEASURES].[现货时长], COUSIN([时间.年月].[月].CURRENTMEMBER,
+    [时间.年月].[月].CURRENTMEMBER.PARENT.PREVMEMBER) )/ ( IIF( ISEMPTY((
+    [MEASURES].[现货周期], COUSIN([时间.年月].[月].CURRENTMEMBER,
+    [时间.年月].[月].CURRENTMEMBER.PARENT.PREVMEMBER))),
+    1, ([MEASURES].[现货周期], COUSIN([时间.年月].[月].CURRENTMEMBER,
+    [时间.年月].[月].CURRENTMEMBER.PARENT.PREVMEMBER))) )
+SELECT
+  {  [MEASURES].[现货率],  MEASURES.[现货率同比]   } ON 0,
+  NON EMPTY {
+    HIERARCHIZE(
+      {  {   [时间.年月].[年].MEMBERS   },
+        {  [时间.年月].[月].MEMBERS   }   }
+      )   } ON 1
+FROM [COMMODITYHOTSTOCK_M]
+#+END_SRC
+**** PREVMEMBER
+上期库存
+#+BEGIN_SRC
+IIF(ISEMPTY(([MEASURES].
+[库存数量], [时间.年月].[月].CURRENTMEMBER.PREVMEMBER)), 0,([MEASURES].[库存数量], [时间.年月].[月].CURRENTMEMBER.PREVMEMBER))
+#+END_SRC
+**** ORDER(排序)
+#+BEGIN_SRC
+SELECT
+NON EMPTY {HIERARCHIZE({[MEASURES].[销量]})} ON COLUMNS,
+NON EMPTY ORDER({HIERARCHIZE({[城市.省份城市].[省份].MEMBERS})}, [MEASURES].[销量], BDESC) ON ROWS
+FROM [HOTCOMMODITYSALE_M]
+#+END_SRC
+**** TOPCOUNT
+按降序对集进行排序，并返回指定数目的最大值元素。(返回销量前10的城市)
+#+BEGIN_SRC
+SELECT
+NON EMPTY {HIERARCHIZE({[MEASURES].[销量]})} ON COLUMNS,
+TOPCOUNT([城市.省份城市].[省份].MEMBERS, 10, [MEASURES].[销量])  ON ROWS
+FROM [HOTCOMMODITYSALE_M]
+
+
+#+END_SRC
+注意：例如取某一个品牌下销量前十的SKU,此时MDX中应该去掉HIERARCHIZE()函数,然后把TOPCOUNT括在FILTER外部
+**** SUBSET（）
+SUBSET 函数用于在使用 ORDER 函数将结果排序后，仅返回结果中的前五个集。
+#+BEGIN_SRC
+SELECT SUBSET
+   (ORDER   ([PRODUCT].[PRODUCT CATEGORIES].[SUBCATEGORY].MEMBERS
+         ,[MEASURES].[RESELLER GROSS PROFIT]  ,BDESC  )
+   ,0
+   ,5
+   ) ON 0
+FROM [ADVENTURE WORKS]
+
+
+#+END_SRC
+**** PERIODSTODATE
+按照时间维度中的指定级别的约束，从给定成员所在的级别返回一组同级成员，从第一个同级成员开始到给定成员为止。
+查询2014年第20周 函数返回从2014年1周到20周的数据
+#+BEGIN_SRC
+SELECT
+{[MEASURES].[超期采购单数量]} ON COLUMNS,
+ PERIODSTODATE(
+    [时间.年周].[2014], [时间.年周].[2014].[20]
+    )
+    ON ROWS
+FROM [PURCHASETHEMEAREA]
+//获取期末库存
+WITH MEMBER MEASURES.[期末库存数量] AS SUM
+   (
+ PERIODSTODATE(    [时间.年周].[年], [时间.年周].[周].CURRENTMEMBER    )  ,
+ [MEASURES].[库存数量]
+     )
+SELECT MEASURES.[期末库存数量] ON 0,
+   {[时间.年周].[年].MEMBERS, [时间.年周].[周].MEMBERS} ON 1
+FROM [COMMODITYHOTSTOCK_W]
+
+#+END_SRC
+**** PARALLELPERIOD
+返回同一个维度的上N个级别
+#+BEGIN_SRC
+PARALLELPERIOD (
+        [时间.年周].[周], N,[时间.年周].[2014].[35]
+)
+
+
+#+END_SRC
+**** SUM
+#+BEGIN_SRC
+WITH MEMBER MEASURES.X AS SUM
+   (
+      MTD([DATE].[CALENDAR].[DATE].[JULY 20, 2002])
+     , [MEASURES].[INTERNET FREIGHT COST]
+     )
+SELECT MEASURES.X ON 0
+FROM [ADVENTURE WORKS]
+
+
+#+END_SRC
+**** TOPSUM（前几名加和）
+#+BEGIN_SRC
+   SELECT [MEASURES].[RESELLER SALES AMOUNT] ON 0,
+TOPSUM
+   ({[GEOGRAPHY].[GEOGRAPHY].[CITY].MEMBERS}
+   , 6000000
+   , [MEASURES].[RESELLER SALES AMOUNT]
+   ) ON 1
+FROM [ADVENTURE WORKS]
+WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
+
+
+#+END_SRC
+**** 求占比：
+#+BEGIN_SRC
+([MEASURES].[销售金额] / ([MEASURES].[销售金额], [城市.省份城市].[省份].CURRENTMEMBER.PARENT))
+#+END_SRC
+
+
+
+* MONDRIAN 介绍
+   - [[HTTP://BLOG.CSDN.NET/LONGSHENLMJ/ARTICLE/DETAILS/18733341][ MONDRIAN SCHEMA WORKBENCH工作界面]]
+   - HTTP://BLOG.CSDN.NET/LONGSHENLMJ/ARTICLE/CATEGORY/1850253
+   - 退化维：HTTP://MONDRIAN.PENTAHO.COM/DOCUMENTATION/SCHEMA.PHP#DEGENERATE_DIMENSIONS
+   - 聚合表：HTTP://MONDRIAN.PENTAHO.COM/DOCUMENTATION/AGGREGATE_TABLES.PHP
+
+
+   MONDRIAN是一个BI开源项目。一个用JAVA写成的OLAP（在线分析性处理）引擎。它用MDX语言实现查询，从关系数据库(RDBMS)中读取数据。然后经过JAVA API用多维的方式对结果进行展示。
+
+*** 编写 MONDRIAN SCHEMA
+
+**** CUBE
+     创建数据立文体（CUBE）。在MONDRIAN里面的CUBE是以XML的形式定义的，他有一个GUI工具WORKBENCH来制作CUBE. [[HTTPS://GITHUB.COM/STANDINO/SAIKU/BLOB/MASTER/FOODMART.XML][具体例子]]。
+
+**** 权限
+
+     权限分为两种，一种是顶一下在MONDRIAN的CUBE中。可以设置CUBE，维度和度量的权限，[[HTTPS://GITHUB.COM/STANDINO/SAIKU/BLOB/MASTER/FOODMART.XML][具体例子]] 。另一种是数据权限，这个需要编写JAVA类实现。具体例子将在下面SAIKU相关小节进行介绍。
+
+
+* Saiku
+
+ - https://github.com/OSBI/saiku-ui
+
+** Saiku介绍
+
+    Saiku是一个模块化的开源分析套件，它提供轻量级的OLAP（联机分析处理），并且可嵌入、可扩展、可配置。
+
+*** Saiku用户手册
+
+系统是基于开源项目构建的一个 OLAP BI 报表系统。它有如下优点：
+
+ - 可以按照多种维度灵活查看各指标。
+ - 提供筛选，排序和钻取功能，方便业务人员对数据进行分析。省去以前需要导出数据在Excel中分析的步骤。
+ - 提供多种导出功能。
+ - 可以生成多种图表，方便查看数据分布和趋势。
+ - 增加新报表的开发工作大幅减少，开发人员可以根据业务人员提出的需求快速开发出新的报表。免去手工提数的工作。
+
+下面我们具体介绍一下如何使用改系统进行查询和分析数据。
+
+**** 选择报表
+
+在左上角的下拉列表中选择需要查看的报表。
+
+[[file:saiku1.png]]
+
+**** 添加维度
+在选择所要查看的报表后，页面会列出报表的维度和指标的选项。
+
+[[file:saiku2.png]]
+
+拖动相应的维度和指标到页面右侧的“列”，”行“或者“过滤”。指标必须放在一起，但是维度可以放在上面三处的任意一处。
+
+[[file:saiku3.png]]
+
+**** 执行查询
+
+默认情况下，当维度和指标被放置到列和行以后，系统会自动执行查询，然后在下方显示报表内容。你也可以点击下面图片中的第二个按钮关闭自动查询。通
+过下面图片中的第一个按钮手动执行。
+
+[[file:saiku4.png]]
+
+**** 交换数轴
+
+下图中的按钮是用于列和行之间的切换。
+
+[[file:saiku5.png]]
+
+**** 排序
+点击箭头可以对结果进行排序。
+[[file:sort.png]]
+
+下图显示了一个按照“已结算金额”进行降序排列的例子：
+
+[[file:saiku6.png]]
+**** 筛选
+查询按钮可以对查询结果进行筛选。
+[[file:magnify.png]]
+
+点击查询按钮后会弹出一个对话框。对话框里列出所有的可选项，用户可以选择需要显示的内容。
+
+[[file:saiku7.png]]
+
+
+**** 保存报表
+
+点击保存按钮可以把当前的查询保存下来。可以供自己或者他人使用。
+
+[[file:saiku8.png]]
+
+在弹出的保存对话框中，输入文件名称，点击保存。
+
+[[file:saiku9.png]]
+
+**** 打开已保存的报表
+点击打开按钮可以打开保存过的报表查询。
+
+[[file:saiku10.png]]
+
+在弹出框内选择保存的报表查询，点击打开。
+
+[[file:saiku11.png]]
+
+[[file:saiku12.png]]
+
+
+**** 生成图表
+
+点击右侧的“图表模式”按钮后，查询的数据就会以图表的形式显示。
+
+[[file:saiku14.png]]
+
+[[file:saiku13.png]]
+
+**** 钻取
+
+点击报表中的单元格，可以进行灵活的钻取查看。
+
+[[file:saiku15.png]]
+
+*** Saiku 基本配置
+
+  - Schema 文件 https://github.com/standino/saiku/blob/master/FoodMart.xml
+  - 连接数据库 http://wiki.meteorite.bi/display/SAIK/Data+Sources
+  - 自定义角色 https://gist.github.com/standino/75198cd6f4e78ec8bfeb
+  - Mondrian-Dynamic-Schema-Processor https://github.com/pentahofan/Mondrian-Dynamic-Schema-Processor
+
+*** saiku 插件编写
+
+    1. https://github.com/OSBI/saiku-ui/wiki/Plugins
+    2. https://github.com/brenopolanski/saiku-plugin-boilerplate
+    3. SaikuChartPlus  https://github.com/it4biz/SaikuChartPlus
+
+1)编辑index.html, 插入如下代码:
+
+#+BEGIN_SRC html
+<!--search for this and put the files under this-->
+<script type="text/javascript" src="js/saiku/plugins/CCC_Chart/plugin.js" ></script>
+<!--start js SaikuChartPlus-->
+<script type="text/javascript" src="js/saiku/plugins/saiku-chart-plus/plugin.js" ></script>
+<!--end js SaikuChartPlus-->
+#+END_SRC
+2) 拷贝插件代码到如下目录 /webapps/ROOT/js/saiku/plugins/
+
+
+
+*** 嵌入式图表的使用
+
+**** 使用保存的query
+
+     这种使用方式需要先把要展示的表格和图表保存下来，通过传入文件路径来展示。这种方式适合不需要下钻的图表。
+
+     只要访问下面两个 url 就可以展示相应的表格和图表。
+
+ 1. http://localhost:8015/saiku-ui/embed/index.html#table/mon.saiku
+ 2. http://localhost:8015/saiku-ui/embed/index.html#chart/mon.saiku
+
+ 井号（#）后面第一个参数表示是表格还是图表，后边是保存query的文件的路径。
+
+ 还有一种方式显示图表，url 如下。这种方式的优点是可以对表格进行过滤和查询。也可以使用 saiku 的插件进一步丰富其功能。
+  - http://localhost:8015/saiku-ui/newindex.html?mode=view&plugin=true#query/open/mon.saiku
+
+/?mode=table&plugin=true#query/open/aaf.saiku
+
+   /saiku-ui/?mode=table&plugin=true#query/open/demo.saiku
+
+   /saiku-ui/?mode=view&plugin=true#query/open/demo.saiku
+**** 使用mdx查询
+
+     这种方式比较灵活，可以编写多种mdx查询语句从后台获得数据，进行展示。
+
+ 1. http://localhost:8015/saiku-ui/embed/index.html#mdxtable/mon.saiku
+ 2. http://localhost:8015/saiku-ui/embed/index.html#mdxchart/mon.saiku
+
+ 大家可以看看下面的代码了解一下具体实现。
+
+**** 相关代码
+
+  - [[https://github.com/standino/saiku-ui/blob/master/embed/index.js][index.js]]
+  - [[https://github.com/standino/saiku-ui/blob/master/js/saiku/embed/SaikuEmbed.js][SaikuEmbed.js]]
+
+** 单点登录
+
+*** 基本思路
+
+公司已经有了SSO 单点登陆方案。登陆成功后，浏览器中会有加密过的cookie信息。Saiku的安全机制是基于Spring security的。在Spring security中有Pre-Authentication机制。
+我们要做的就是实现Pre-Authentication，通过读取公司SSO系统中的cookie信息获得登陆人，并且编写角色赋权的逻辑，然后传给spring security。这样saiku系统就会使用我们传给它的
+角色来确定显示哪些cube。
+
+* 引入 redis 缓存
+
+  - http://infocenter.pentaho.com/help/index.jsp?topic=%2Fanalysis_guide%2Fconcept_segment_cache_architecture.html
+  - https://github.com/pentaho/mondrian/blob/master/src/main/mondrian/rolap/cache/MemorySegmentCache.java
+  - http://mondrian.pentaho.com/api/mondrian/spi/SegmentCache.html
+  - http://stackoverflow.com/questions/17533594/implementing-a-mondrian-shared-segmentcache
+  - https://github.com/webdetails/cdc/blob/master/cdc-core/src/pt/webdetails/cdc/mondrian/SegmentCacheHazelcast.java
+我们使用redis作为缓存。mondrian 默认是不支持 redis的。我们需要自己实现。
+
+
+** 下面是两个缓存的例子，分别用内存和cdc作为缓存
+
+ - [[https://github.com/pentaho/mondrian/blob/master/src/main/mondrian/rolap/cache/MemorySegmentCache.java][MemorySegmentCache]]
+ - [[https://github.com/webdetails/cdc/blob/master/cdc-core/src/pt/webdetails/cdc/mondrian/SegmentCacheHazelcast.java][SegmentCacheHazelcast]]
+
+#+BEGIN_SRC java
+
+public class MemorySegmentCache implements SegmentCache {
+    // Use a thread-safe map because the SegmentCache
+    // interface requires thread safety.
+    private final Map<SegmentHeader, SoftReference<SegmentBody>> map =
+        new ConcurrentHashMap<SegmentHeader, SoftReference<SegmentBody>>();
+    private final List<SegmentCacheListener> listeners =
+        new CopyOnWriteArrayList<SegmentCacheListener>();
+
+#+END_SRC
+
+** 实现mondrian 缓存的步骤如下：
+
+  1. 实现接口 SegmentCache
+  2. 修改配置文件mondrian.properties,指定自定义的缓存实现类
+
+#+BEGIN_SRC
+###############################################################################
+# Boolean property that controls whether the data from segments
+# is cached locally. To create custom caches, look for the
+# SegmentCache SPI.
+#
+mondrian.rolap.star.disableLocalSegmentCache=true
+
+###############################################################################
+# Property which defines which SegmentCache implementation to use.
+# Specify the value as a fully qualified class name, such as
+# org.example.SegmentCacheImpl where SegmentCacheImpl
+# is an implementation of mondrian.spi.SegmentCache.
+#
+mondrian.rolap.SegmentCache=.cache.redis.RedisSegmentCache
+
+#+END_SRC
+
+** 基于redis 的 mondrian 缓存实现
+
+实现的思路应该和基于内存的缓存类似，我们需要根据ConcurrentHashMap<SegmentHeader, SoftReference<SegmentBody>>设计出redis的数据结构
+
+如何设计redis的数据结构请参考这篇[[http://standino.github.io/blog/2013/12/24/redis/][文章]].
+#+BEGIN_SRC java
+
+public class RedisSegmentCache implements SegmentCache{
+  private static final Logger log = Logger.getLogger(RedisSegmentCache.class);
+  private final List<SegmentCacheListener> listeners =
+          new CopyOnWriteArrayList<SegmentCacheListener>();
+
+      public SegmentBody get(SegmentHeader header) {
+        RedisDao map =
+            (RedisDao)DashBoardContext.getBean("redisDao");
+        if(header==null)
+          return null;
+
+        final byte[] ref = map.get(Md5Utils.md5sum(header.toString()));
+          if (ref == null) {
+            try {
+                this.remove(header);
+        } catch (Exception e) {
+          log.error("SegmentBody get error："+e.getMessage());
+        }
+              return null;
+          }
+          final SegmentBody body = (SegmentBody) SerializeUtil.unserialize(ref);
+          if (body == null) {
+              try {
+                this.remove(header);
+                log.info("RedisSegmentCache execute body == null,this.remove(header)!");
+        } catch (Exception e) {
+          log.error("SegmentBody get error："+e.getMessage());
+        }
+          }else{
+            Map valuemap = body.getValueMap();
+            if(valuemap==null||valuemap.size()==0){
+              this.remove(header);
+              log.info("RedisSegmentCache execute valuemap==null||valuemap.size()==0,this.remove(header)!");
+            }else{
+              log.info("RedisSegmentCache execute get sucess!");
+            }
+
+          }
+
+          return body;
+      }
+
+      public boolean contains(SegmentHeader header) {
+        if(header==null)
+          return false;
+        RedisDao map =
+            (RedisDao)DashBoardContext.getBean("redisDao");
+        final byte[] ref = map.get(Md5Utils.md5sum(header.toString()));
+          if (ref == null) {
+              return false;
+          }
+          final SegmentBody body = (SegmentBody) SerializeUtil.unserialize(ref);
+          if (body == null) {
+              try {
+                this.remove(header);
+        } catch (Exception e) {
+          log.error("SegmentBody contains error："+e.getMessage());
+        }
+              return false;
+          }
+          log.info("RedisSegmentCache execute contains sucess!");
+          return true;
+      }
+
+      public List<SegmentHeader> getSegmentHeaders() {
+      return null;
+      }
+
+      public boolean put(final SegmentHeader header, SegmentBody body) {
+          assert header != null;
+          assert body != null;
+
+          RedisDao map =
+            (RedisDao)DashBoardContext.getBean("redisDao");
+          try {
+        map.put(Md5Utils.md5sum(header.toString()), SerializeUtil.serialize(body));
+      } catch (Exception e) {
+        log.error("SegmentBody put error："+e.getMessage());
+      }
+          fireSegmentCacheEvent(
+              new SegmentCache.SegmentCacheListener.SegmentCacheEvent() {
+                  public boolean isLocal() {
+                      return false;
+                  }
+                  public SegmentHeader getSource() {
+                      return header;
+                  }
+                  public EventType getEventType() {
+                      return SegmentCacheListener.SegmentCacheEvent
+                          .EventType.ENTRY_CREATED;
+                  }
+              });
+          log.info("RedisSegmentCache execute put sucess!");
+          return true; // success
+      }
+
+      public boolean remove(final SegmentHeader header) {
+        if(header==null)
+          return false;
+        RedisDao map =
+            (RedisDao)DashBoardContext.getBean("redisDao");
+          boolean result = false;
+      try {
+        result = map.remove(Md5Utils.md5sum(header.toString())) != null;
+
+              fireSegmentCacheEvent(
+                  new SegmentCache.SegmentCacheListener.SegmentCacheEvent() {
+                      public boolean isLocal() {
+                          return true;
+                      }
+                      public SegmentHeader getSource() {
+                          return header;
+                      }
+                      public EventType getEventType() {
+                          return
+                              SegmentCacheListener.SegmentCacheEvent
+                                  .EventType.ENTRY_DELETED;
+                      }
+                  });
+      }catch (Exception e) {
+        log.error("SegmentBody remove error："+e.getMessage());
+      }
+      log.info("RedisSegmentCache execute remove sucess!");
+          return result;
+      }
+
+      public void tearDown() {
+        RedisDao map =
+            (RedisDao)DashBoardContext.getBean("redisDao");
+          map.clear();
+          listeners.clear();
+          log.info("RedisSegmentCache execute tearDown sucess!");
+      }
+
+      public void addListener(SegmentCacheListener listener) {
+          listeners.add(listener);
+      }
+
+      public void removeListener(SegmentCacheListener listener) {
+          listeners.remove(listener);
+      }
+
+      public boolean supportsRichIndex() {
+          return true;
+      }
+
+      public void fireSegmentCacheEvent(
+          SegmentCache.SegmentCacheListener.SegmentCacheEvent evt)
+      {
+          for (SegmentCacheListener listener : listeners) {
+              listener.handle(evt);
+          }
+      }
+}
+
+#+END_SRC
+* spark SQL
+
+  - http://spark.apache.org/sql/
+  - [[http://spark.apache.org/docs/latest/sql-programming-guide.html][Running SQL on RDDs]]
+  - [[http://aws.amazon.com/articles/Elastic-MapReduce/4926593393724923][Run Spark and Shark on Amazon Elastic MapReduce]]
+  - [[http://blog.csdn.net/wyc09/article/details/19417663][编写Java程序访问Spark环境]]
+  - [[http://spark.apache.org/docs/latest/sql-programming-guide.html][Spark SQL Programming Guide]]
+
+* mysql
+ - [[http://www.joyofdata.de/blog/setting-up-a-time-dimension-table-in-mysql/][SQL脚本插入时间维度表数据]]
+
+下面看的几个比较好的Mysql优化介绍：
+- http://www.cnblogs.com/hustcat/archive/2009/10/28/1591648.html 
+- http://www.cnitblog.com/aliyiyi08/archive/2008/09/09/48878.html  （执行计划说明）
+- http://tech.meituan.com/mysql-index.html （美团网一个技术人员写的，个人觉得写的非常好）
+
+
+** 建立索引
+
+- mysql的需要建索引的字段的长度要小于255，否则mysql是不使用索引的。
+- 为事实表中所有的外键建立单独索引。
+- 维表所有层次中所有级别对应的列需要分别单独索引。
+
+* 参考资料
+  - [[https://www.concur.com/blog/en-us/connect-tableau-to-sparksql][connect-tableau-to-sparksql]]
+  - [[http://docs.aws.amazon.com/redshift/latest/gsg/getting-started.html][Getting Started with Amazon Redshift]]
+ - [[http://blog.csdn.net/leamonjxl/article/details/6681112][数据仓库的架构主要有星型和雪花型两种方式]]
+ - http://wenku.baidu.com/view/7a2615a20029bd64783e2cf1.html
+ - http://blog.sina.com.cn/s/blog_7d8f0a900100qplj.html
+ - http://www.huqiwen.com/2012/06/15/olap-abstruct-and-mondrian-quick-start/
+ - [[http://customme.iteye.com/blog/1880478][Saiku Server环境搭建]]
+ - [[http://blog.csdn.net/longshenlmj/article/details/19111227][Saiku去掉登录模块]]
+ - https://github.com/pentaho/mondrian
+ - https://github.com/OSBI/saiku
+ - http://ci.analytical-labs.com/
+ - http://docs.analytical-labs.com/
+ - How to quickly add a date dimension to a Pentaho Mondrian OLAP cube http://www.freeportmetrics.com/devblog/2012/11/02/how-to-quickly-add-date-dimension-to-pentaho-mondrian-olap-cube/
+ - Mondrian 文档 http://mondrian.pentaho.com/documentation/schema.php#Time_dimensions
+   - http://blog.analytical-labs.com/
+   - http://forums.meteorite.bi/
+   - http://jira.meteorite.bi/secure/Dashboard.jspa
+   - http://docs.analytical-labs.com/
+   - http://jira.pentaho.com/browse/MONDRIAN-1584
+   - Backbone入门指南（一）：什么是Backbone? http://yujianshenbing.iteye.com/blog/1748447
+   - http://documentcloud.github.com/underscore/
+ - [[http://blog.csdn.net/adparking/article/details/6676571][mysql中的load data infile用法]]
+ - [[http://www.blogjava.net/qileilove/archive/2012/04/23/376353.html][定时备份mysql数据库 并删除7天前的备份 （windows linux ）]]
+ - [[http://blog.csdn.net/jinkelei/article/details/6833997][mysql定时备份和删除]]
+ - [[http://my.oschina.net/zimingforever/blog/91287][mysql删除大表的部分数据]]
+    
+   1. [[http://blog.sbeynon.net/2011/12/spring-security-with-sso-headers.html][Spring Security with SSO Headers - integrating with OAM WebGate]]
+   2. [[http://www.blogjava.net/youxia/archive/2008/12/07/244883.html][SpringSide 3 中的安全框架]]
+
