@@ -71,11 +71,9 @@
 
 * 开始
 ** 启动说明
-[2015-09-10 四 11:15]
-[2015-09-10 四 09:57]
 
 
-执行 ./SAIKU JETTY 命令， 然后访问 HTTP://LOCALHOST:9988
+执行 ./saiku jetty 命令， 然后访问 http://localhost:9988
 
 
 ** 功能说明
@@ -85,7 +83,6 @@
 
 ** 安装和配置开发环境
 *** 开发工具
-[2015-09-10 四 10:24]
 
 - NODEJS: HTTPS://NODEJS.ORG/
 - JDK 8 & JCE
@@ -1201,8 +1198,8 @@ public class RedisSegmentCache implements SegmentCache{
 - 维表所有层次中所有级别对应的列需要分别单独索引。
 
 * 参考资料
-  - [[https://www.concur.com/blog/en-us/connect-tableau-to-sparksql][connect-tableau-to-sparksql]]
-  - [[http://docs.aws.amazon.com/redshift/latest/gsg/getting-started.html][Getting Started with Amazon Redshift]]
+ - [[https://www.concur.com/blog/en-us/connect-tableau-to-sparksql][connect-tableau-to-sparksql]]
+ - [[http://docs.aws.amazon.com/redshift/latest/gsg/getting-started.html][Getting Started with Amazon Redshift]]
  - [[http://blog.csdn.net/leamonjxl/article/details/6681112][数据仓库的架构主要有星型和雪花型两种方式]]
  - http://wenku.baidu.com/view/7a2615a20029bd64783e2cf1.html
  - http://blog.sina.com.cn/s/blog_7d8f0a900100qplj.html
@@ -1215,17 +1212,16 @@ public class RedisSegmentCache implements SegmentCache{
  - http://docs.analytical-labs.com/
  - How to quickly add a date dimension to a Pentaho Mondrian OLAP cube http://www.freeportmetrics.com/devblog/2012/11/02/how-to-quickly-add-date-dimension-to-pentaho-mondrian-olap-cube/
  - Mondrian 文档 http://mondrian.pentaho.com/documentation/schema.php#Time_dimensions
-   - http://blog.analytical-labs.com/
-   - http://forums.meteorite.bi/
-   - http://jira.meteorite.bi/secure/Dashboard.jspa
-   - http://docs.analytical-labs.com/
-   - http://jira.pentaho.com/browse/MONDRIAN-1584
-   - Backbone入门指南（一）：什么是Backbone? http://yujianshenbing.iteye.com/blog/1748447
-   - http://documentcloud.github.com/underscore/
+ - http://blog.analytical-labs.com/
+ - http://forums.meteorite.bi/
+ - http://jira.meteorite.bi/secure/Dashboard.jspa
+ - http://docs.analytical-labs.com/
+ - http://jira.pentaho.com/browse/MONDRIAN-1584
+ - Backbone入门指南（一）：什么是Backbone? http://yujianshenbing.iteye.com/blog/1748447
+ - http://documentcloud.github.com/underscore/
  - [[http://blog.csdn.net/adparking/article/details/6676571][mysql中的load data infile用法]]
  - [[http://www.blogjava.net/qileilove/archive/2012/04/23/376353.html][定时备份mysql数据库 并删除7天前的备份 （windows linux ）]]
  - [[http://blog.csdn.net/jinkelei/article/details/6833997][mysql定时备份和删除]]
  - [[http://my.oschina.net/zimingforever/blog/91287][mysql删除大表的部分数据]]
-
-   1. [[http://blog.sbeynon.net/2011/12/spring-security-with-sso-headers.html][Spring Security with SSO Headers - integrating with OAM WebGate]]
-   2. [[http://www.blogjava.net/youxia/archive/2008/12/07/244883.html][SpringSide 3 中的安全框架]]
+ - [[http://blog.sbeynon.net/2011/12/spring-security-with-sso-headers.html][Spring Security with SSO Headers - integrating with OAM WebGate]]
+ - [[http://www.blogjava.net/youxia/archive/2008/12/07/244883.html][SpringSide 3 中的安全框架]]
