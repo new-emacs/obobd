@@ -1,3 +1,4 @@
+[中文文档](README.org)
 
 
 SAIKU
