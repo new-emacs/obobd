@@ -146,20 +146,21 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
     if (session == null) {
       log.info("starting repo");
 
-      String dir = data;
+        String dir = data;
 
-      final DefaultResourceLoader loader = new DefaultResourceLoader();
+        String xml = config;
 
-      log.info("配置文件【" + config + "】是否存在？" + loader.getResource("classpath:" + config).exists());
+        RepositoryConfig config = null;
 
-      Resource resource = loader.getResource("classpath:" + config);
+        try {
+            final DefaultResourceLoader loader = new DefaultResourceLoader();
+            Resource resource = loader.getResource("classpath:" + xml);
 
-      RepositoryConfig config = null;
-      try {
-        config = RepositoryConfig.create(resource.getURI(), dir);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+            log.info("配置文件【" + xml + "】是否存在？" + resource.exists());
+            config = RepositoryConfig.create(resource.getURI(), dir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
       repository = RepositoryImpl.create(config);
 
       log.info("repo started");
@@ -1086,7 +1087,7 @@ System.out.println(e.getLocalizedMessage());
 
             repoObjects
                 .add(new RepositoryFileObject(filename, "#" + files.getPath(), extension, files.getPath(),
-                    acls));
+                        acls));
           }
           if (files.getPrimaryNodeType().getName().equals("nt:folder")) {
             List<AclMethod> acls = acl2.getMethods(files, username, roles);
@@ -1165,7 +1166,7 @@ System.out.println(e.getLocalizedMessage());
 
                   repoObjects
                       .add(new RepositoryFileObject(filename, "#" + relativePath, extension, relativePath,
-                          acls));
+                              acls));
                 }
                 if (file.getPrimaryNodeType().getName().equals("nt:folder")) {
                   //repoObjects.add(new RepositoryFolderObject(filename, "#" + relativePath, relativePath, acls, getRepoObjects(file, fileType, username, roles)));
