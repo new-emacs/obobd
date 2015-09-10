@@ -122,7 +122,8 @@ ONLINE ANALYTICAL PROCESSING(OLAP)即 联机分析处理 。
 
 **** 星形结构
 
-   1. 事实(FACT)和维(DIMENSION)
+事实(FACT)和维(DIMENSION)
+
 当我们观察数据时，通常想察看聚合数据的某种顺序。这些数据叫做度量(MEASURE)。度量就是可以度量和相加的数值。比如销售金额就是一种度量，
 每个订单都有销售金额。假设每天销售20个产品，每个5美元，销售总额就是100美元。销售金额就是我们想关注的一种度量。此外我们可能还想知道
 当天的顾客数，是5位顾客一共买了20个产品，还是1位顾客买了所有的20个产品呢？销售金额和顾客数量就是我们想关注的两个度量。
@@ -150,21 +151,21 @@ ONLINE ANALYTICAL PROCESSING(OLAP)即 联机分析处理 。
 - 访问通过外键关联的很少的结果集：因为数据量少，查询的COST较少。
 
 星型结构的好处：
-- 维度表数据量少，小表关联大表，数据库对这样的SQL有很好的优化能力。
-- 用SQL语句查询星型结构的表，比较简单；不需要考虑太多的关联关系。
+- 维度表数据量少，小表关联大表，数据库对这样的 SQL 有很好的优化能力。
+- 用 SQL 语句查询星型结构的表，比较简单；不需要考虑太多的关联关系。
 
 ** MDX
       - [[HTTP://MSDN.MICROSOFT.COM/EN-US/LIBRARY/AA216767(SQL.80).ASPX][MDX OVERVIEW]]
       - [[HTTP://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS146052.ASPX][MDX 中文文档]]
       - [[HTTP://JIM19770812.BLOGSPOT.COM/2009/04/MONDRIAN-SCHEMA-WORKBENCHMDX.HTML][使用MONDRIAN SCHEMA WORKBENCH调试MDX]]
-      - HTTPS://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS144785.ASPX
+      - [[HTTPS://MSDN.MICROSOFT.COM/ZH-CN/LIBRARY/MS144785.ASPX]]
 
 #+BEGIN_SRC
 
 SELECT
 NON EMPTY {HIERARCHIZE({[MEASURES].[已结算金额]})} ON COLUMNS,
 NON EMPTY {HIERARCHIZE({{[TIME.按周统计].[18], [TIME.按周统计].[19], [TIME.按周统计].[20], [TIME.按周统计].[21]}})} ON ROWS
-FROM [SALESMONEYREPORTV2]
+FROM [MONEY_REPORT]
 
 #+END_SRC
 
