@@ -440,30 +440,30 @@ WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
 
 
         +------------------------------------------------------+
-        |   Sales schema                                       |                 <Schema name= 'Sales' ...>
+        |   Sales schema                                       |  <Schema name= 'Sales' ...>
         |                                                      |
         |                                                      |
         |      +--------------------------------------------+  |
-        |      |  Sales Cube                                |  |                    <Cube name= 'Sales' ...>
+        |      |  Sales Cube                                |  |     <Cube name= 'Sales' ...>
         |      |                                            |  |
-        |      |            Dimensions                      |  |                     <Dimension name= 'Time' ...>
+        |      |            Dimensions                      |  |      <Dimension name= 'Time' ...>
         |      |         +-------------+        +---------+ |  |
         |      |         | Time        |        | Customer| |  |
         |      |         |             |        |         | |  |
-        |      |         |   Year      |        | Edu     | |  |                      <Attribute name= 'Year' .../>
-        |      |         |   Month     |        | Name    | |  |                      <Attribute name= 'Month' .../>
-        |      |         |   Day       |        |         | |  |                      <Attribute name= 'Day' .../>
-        |      |         |             |        |         | |  |                     <Dimension>
-        |      |         |             |        |         | |  |                     <Dimension name= 'Customer' ...>
-        |      |         +-------------+        +---------+ |  |                       <Attribute name= 'Education' .../>
-        |      |                                            |  |                       <Attribute name= 'Name' .../>
-        |      |                                            |  |                     <Dimension>
-        |      |    Measures                                |  |                     ...
+        |      |         |   Year      |        | Edu     | |  |       <Attribute name= 'Year' .../>
+        |      |         |   Month     |        | Name    | |  |       <Attribute name= 'Month' .../>
+        |      |         |   Day       |        |         | |  |       <Attribute name= 'Day' .../>
+        |      |         |             |        |         | |  |      <Dimension>
+        |      |         |             |        |         | |  |      <Dimension name= 'Customer' ...>
+        |      |         +-------------+        +---------+ |  |        <Attribute name= 'Education' .../>
+        |      |                                            |  |        <Attribute name= 'Name' .../>
+        |      |                                            |  |      <Dimension>
+        |      |    Measures                                |  |      ...
         |      |    +-----------------+                     |  |
-        |      |    | Unit Sales      |                     |  |                     <Measure name= 'Unit Sales' .../>
-        |      |    |                 |                     |  |                     <Measure name= 'Store Sales' .../>
-        |      |    +-----------------+                     |  |                     </Cube>
-        |      |    +-----------------+                     |  |                     </Schema>
+        |      |    | Unit Sales      |                     |  |      <Measure name= 'Unit Sales' .../>
+        |      |    |                 |                     |  |      <Measure name= 'Store Sales' .../>
+        |      |    +-----------------+                     |  |     </Cube>
+        |      |    +-----------------+                     |  |    </Schema>
         |      |    |     Store Sales |                     |  |
         |      |    +-----------------+                     |  |
         |      +---------------+-------------+--------------+  |
