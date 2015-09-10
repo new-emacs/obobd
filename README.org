@@ -435,6 +435,9 @@ WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
 
 这是一个具体的例子： https://github.com/bisone/saiku/blob/master/util/FoodMart4.xml
 
+#+begin_src 
+
+
 
         +------------------------------------------------------+
         |   Sales schema                                       |                 <Schema name= 'Sales' ...>
@@ -468,6 +471,7 @@ WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
         +------------------------------------------------------+
 
 
+#+end_src
 
 ***** Schema element
 [2015-09-10 四 14:31]
@@ -511,6 +515,7 @@ Attribute 类似关系型数据库中的 column。 上面的例子表示[Custome
 
 name，caption和description同样适用于schema，cube，measure和dimensions。他们还有一个visible属性，用于在页面上隐藏他们，但是不会影响MDX的执行。
 | XML属性       | 组合键？ | 描述                            |
+|---------------+----------+---------------------------------|
 | keyColumn     | Yes      | 必须，属性对应的主键，必须唯一  |
 | nameColumn    | No       | 可选，指定存储该属性名称的列    |
 | orderByColumn | Yes      | 可选，按什么排序，默认按key排序 |
