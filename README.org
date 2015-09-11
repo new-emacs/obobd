@@ -1,5 +1,6 @@
+#+TITLE: 使用 Saiku 开发 OLAP 系统 
 #+OPTIONS:     H:3 num:nil toc:t \n:nil ::t |:t ^:nil -:nil f:t *:t <:t
-#+DESCRIPTION: 使用saiku开发OLAP系统
+#+DESCRIPTION: 使用 Saiku 开发 OLAP 系统
 #+STARTUP: showall
 #+STARTUP: indent
 #+STARTUP: hidestars
@@ -65,6 +66,7 @@
    - [[#实现mondrian-缓存的步骤如下：][实现mondrian 缓存的步骤如下：]]
    - [[#基于redis-的-mondrian-缓存实现][基于redis 的 mondrian 缓存实现]]
  - [[#spark-sql][spark SQL]]
+ - [[#presto][Presto]]
  - [[#mysql][mysql]]
    - [[#建立索引][建立索引]]
  - [[#参考资料][参考资料]]
@@ -1181,7 +1183,10 @@ public class RedisSegmentCache implements SegmentCache{
   - [[http://aws.amazon.com/articles/Elastic-MapReduce/4926593393724923][Run Spark and Shark on Amazon Elastic MapReduce]]
   - [[http://blog.csdn.net/wyc09/article/details/19417663][编写Java程序访问Spark环境]]
   - [[http://spark.apache.org/docs/latest/sql-programming-guide.html][Spark SQL Programming Guide]]
+* Presto
 
+ - http://prestodb.io/docs/current/
+ ./presto --server localhost:8080 --catalog mysql --schema jackrabbit 
 * mysql
  - [[http://www.joyofdata.de/blog/setting-up-a-time-dimension-table-in-mysql/][SQL脚本插入时间维度表数据]]
 
