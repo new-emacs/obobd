@@ -2,11 +2,11 @@
     <parent>
         <artifactId>saiku</artifactId>
         <groupId>org.saiku</groupId>
-        <version>3.4.2</version>
+        <version>3.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>saiku-webapp</artifactId>
-    <version>3.4.2</version>
+    <version>3.5</version>
     <name>saiku - webapp</name>
     <packaging>war</packaging>
 
@@ -175,6 +175,18 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.10</version>
             </plugin>
+<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<path>/</path>
+					<port>8015</port>
+					<uriEncoding>UTF-8</uriEncoding>
+					<server>tomcat6</server>
+				</configuration>
+			</plugin>
+
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
@@ -220,7 +232,7 @@
         <dependency>
             <groupId>org.saiku</groupId>
             <artifactId>saiku-olap-util</artifactId>
-        </dependency>
+       </dependency>
         <dependency>
             <groupId>org.saiku</groupId>
             <artifactId>saiku-query</artifactId>

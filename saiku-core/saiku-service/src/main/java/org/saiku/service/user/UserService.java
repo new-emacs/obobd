@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by bugg on 01/05/14.
  */
 public class UserService implements IUserManager, Serializable {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     JdbcUserDAO uDAO;
 
@@ -111,6 +114,9 @@ public class UserService implements IUserManager, Serializable {
 
     public boolean isAdmin() {
         List<String> roles = (List<String> ) sessionService.getAllSessionObjects().get("roles");
+
+        log.debug("roles=" + roles);
+        log.debug("adminRoles=" + adminRoles);
 
         return !Collections.disjoint(roles, adminRoles);
 

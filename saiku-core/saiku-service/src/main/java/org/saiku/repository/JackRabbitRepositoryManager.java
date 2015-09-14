@@ -15,14 +15,7 @@
  */
 package org.saiku.repository;
 
-
-import org.saiku.database.dto.MondrianSchema;
-import org.saiku.datasources.connection.RepositoryFile;
-import org.saiku.service.user.UserService;
-import org.saiku.service.util.exception.SaikuServiceException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.jackrabbit.api.JackrabbitRepository;
 import org.apache.jackrabbit.api.JackrabbitSession;
@@ -32,13 +25,14 @@ import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.jackrabbit.core.RepositoryImpl;
 import org.apache.jackrabbit.core.config.RepositoryConfig;
+import org.saiku.database.dto.MondrianSchema;
+import org.saiku.datasources.connection.RepositoryFile;
+import org.saiku.service.user.UserService;
+import org.saiku.service.util.exception.SaikuServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 
 import javax.jcr.*;
 import javax.jcr.nodetype.NodeTypeExistsException;
@@ -52,6 +46,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * JackRabbit JCR Repository Manager for Saiku.
@@ -130,23 +128,39 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
     }
 
     //Make sure new password is set to repo default
-    if(password!=null && !password.equals("")) {
-      UserManager userManager = ((JackrabbitSession) session).getUserManager();
-      Authorizable authorizable = userManager.getAuthorizable("admin");
+    //TODO Fixme mysql 不支持 UserManager
+    try {
+      if (password != null && !password.equals("")) {
+        UserManager userManager = ((JackrabbitSession) session).getUserManager();
+        Authorizable authorizable = userManager.getAuthorizable("admin");
 
-      ((User) authorizable).changePassword(password);
+        ((User) authorizable).changePassword(password);
+      }
+    }catch (Exception e){
+      e.printStackTrace();
     }
-
   }
-
 
   public boolean start(UserService userService) throws RepositoryException {
     this.userService = userService;
     if (session == null) {
       log.info("starting repo");
-      String xml = config;
-      String dir = data;
-      RepositoryConfig config = RepositoryConfig.create(xml, dir);
+
+        String dir = data;
+
+        String xml = config;
+
+        RepositoryConfig config = null;
+
+        try {
+            final DefaultResourceLoader loader = new DefaultResourceLoader();
+            Resource resource = loader.getResource("classpath:" + xml);
+
+            log.info("配置文件【" + xml + "】是否存在？" + resource.exists());
+            config = RepositoryConfig.create(resource.getURI(), dir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
       repository = RepositoryImpl.create(config);
 
       log.info("repo started");
@@ -155,10 +169,14 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
       log.info("logged in");
 
       JackrabbitSession js = (JackrabbitSession) session;
-      if(js.getUserManager().getAuthorizable("anon")==null) {
-        js.getUserManager().createUser("anon", "anon");
-        js.save();
+      try {
+        if (js.getUserManager().getAuthorizable("anon") == null) {
+          js.getUserManager().createUser("anon", "anon");
+          js.save();
 
+        }
+      }catch(Exception e){
+        e.printStackTrace();
       }
       session = js;
       root = session.getRootNode();
@@ -1069,7 +1087,7 @@ System.out.println(e.getLocalizedMessage());
 
             repoObjects
                 .add(new RepositoryFileObject(filename, "#" + files.getPath(), extension, files.getPath(),
-                    acls));
+                        acls));
           }
           if (files.getPrimaryNodeType().getName().equals("nt:folder")) {
             List<AclMethod> acls = acl2.getMethods(files, username, roles);
@@ -1148,7 +1166,7 @@ System.out.println(e.getLocalizedMessage());
 
                   repoObjects
                       .add(new RepositoryFileObject(filename, "#" + relativePath, extension, relativePath,
-                          acls));
+                              acls));
                 }
                 if (file.getPrimaryNodeType().getName().equals("nt:folder")) {
                   //repoObjects.add(new RepositoryFolderObject(filename, "#" + relativePath, relativePath, acls, getRepoObjects(file, fileType, username, roles)));

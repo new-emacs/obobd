@@ -28,7 +28,7 @@ var Saiku = {
      */
     tabs: new TabSet(),
 
-    splash: new SplashScreen(),
+    splash: {},//new SplashScreen(),
     /**
      * Model which handles session and authentication
      */

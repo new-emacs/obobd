@@ -1,4 +1,4 @@
-/*
+/*  
  *   Copyright 2012 OSBI Ltd
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +18,15 @@
  * Renders a chart for each workspace
  */
 var Chart = Backbone.View.extend({
+    events: {
+        'click #charteditor' : 'show_editor',
+        'click #mapeditor' : 'show_map_config'
 
+    },
     initialize: function(args) {
-
+        
         this.workspace = args.workspace;
-
+        
         // Create a unique ID for use as the CSS selector
         this.id = _.uniqueId("chart_");
         $(this.el).attr({ id: this.id });
@@ -42,64 +46,94 @@ var Chart = Backbone.View.extend({
             $(self.el).find('.canvas_wrapper').hide();
             return false;
         });
-
+        
         this.workspace.bind('query:result', this.receive_data);
 
          var pseudoForm = "<div id='nav" + this.id + "' style='display:none' class='nav'><form id='svgChartPseudoForm' target='_blank' method='POST'>" +
                 "<input type='hidden' name='type' class='type'/>" +
                 "<input type='hidden' name='svg' class='svg'/>" +
-			 	"<input type='hidden' name='name' class='name'/>" +
                 "</form></div>";
         if (isIE) {
             pseudoForm = "<div></div>";
         }
         this.nav =$(pseudoForm);
+ //$(this.el).append('<div style="display: block !important;" id="charteditor" class="chart_editor">HELLOOOOOO</div>');
 
         $(this.el).append(this.nav);
 
 
     },
 
+    getData: function() {
+        return this.data;
+    },
+
     exportChart: function(type) {
         var svgContent = new XMLSerializer().serializeToString($('svg')[0]);
         var rep = '<svg xmlns="http://www.w3.org/2000/svg" ';
         if (svgContent.substr(0,rep.length) != rep) {
-            svgContent = svgContent.replace('<svg ', rep);
+            svgContent = svgContent.replace('<svg ', rep);    
         }
         svgContent = '<!DOCTYPE svg [<!ENTITY nbsp "&#160;">]>' + svgContent;
-
+        
         var form = $('#svgChartPseudoForm');
         form.find('.type').val(type);
         form.find('.svg').val(svgContent);
-		if(this.workspace.query.name!=undefined) {
-			var f = this.workspace.query.name.substring(this.workspace.query.name.lastIndexOf('/') + 1).slice(0, -6);
-			form.find('.name').val(f);
-		}
         form.attr('action', Settings.REST_URL + this.workspace.query.url() + escape("/../../export/saiku/chart"));
         form.submit();
         return false;
     },
 
+    show_editor:function(event){
+        (new ChartEditor({data: this.renderer, workspace: this.workspace})).render().open();
+    },
+    show_map_config: function(event){
+        (new MapEditor({data: this.renderer, workspace: this.workspace})).render().open();
+    },
     render_view: function() {
     	// Append chart to workspace, called by workspace
         $(this.workspace.el).find('.workspace_results')
             .prepend($(this.el).hide());
     },
-
+    
     show: function(event, ui) {
         var self = this;
         this.workspace.adjust();
         this.renderer.cccOptions.width = $(this.workspace.el).find('.workspace_results').width() - 40;
         this.renderer.cccOptions.height = $(this.workspace.el).find('.workspace_results').height() - 40;
-
+        
         $(this.el).show();
-
         var hasRun = this.workspace.query.result.hasRun();
+        //$(this.workspace.el).find('.query_toolbar').append('<div style="display: block !important;" id="charteditor" class="chart_editor">HELLOOOOOO</div>');
+        if($(this.workspace.el).find('#charteditor').length ===0) {
+            $(this.workspace.el).find('.query_toolbar_vertical').find('.options.chart.hide li:eq(0)').after('<li id="charteditor" class="seperator_vertical chart_editor"><a href="#" class="button">Properties</a></li>');
+            if(Settings.MAPS) {
+            	$(this.workspace.el).find('.query_toolbar_vertical').find('.options.chart.hide li:eq(1)').after('<li id="mapeditor"><a href="#map" class="button">Map</a></li>');
+            }
 
+            $(this.workspace.el).find('.query_toolbar_vertical').find('#charteditor').on('click', function () {
+                self.show_editor();
+            });
+            $(this.workspace.el).find('.query_toolbar_vertical').find('#mapeditor').on('click', function () {
+                self.show_map_config();
+            });
+        }
         if (hasRun) {
             _.defer( function() {
                 self.renderer.process_data_tree({ data: self.workspace.query.result.lastresult() }, true, true);
-                self.renderer.switch_chart(self.renderer.type);
+                var p = self.workspace.query.getProperty("saiku.ui.chart.options");
+                if(self.workspace.query.getProperty("saiku.ui.render.mode") === "chart") {
+                    self.renderer.switch_chart(self.renderer.type, p);
+                }
+                else if (Settings.MAPS && Settings.MAPS_TYPE === 'OSM' && self.workspace.query.getProperty("saiku.ui.render.mode") === "map") {
+                    var mapType = self.renderer.mapOptions.type;
+                    var mapProperties = {};
+                    mapProperties.chartDefinition = self.renderer.chartDefinition;
+                    var saikuMapRenderer = new SaikuMapRenderer(self, mapType, mapProperties);
+                    setTimeout(function() {
+                        saikuMapRenderer.renderMap();
+                    }, 100);
+                }
             });
         }
 
@@ -107,11 +141,15 @@ var Chart = Backbone.View.extend({
 
     },
 
+ chart_editor: function() {
+$('a#acharteditor').click();
+return true;
+},
 
     export_button: function(event) {
         var self = this;
         var $target = $(event.target).hasClass('button') ? $(event.target) : $(event.target).parent();
-
+        
         var self = this;
         var $body = $(document);
         //$body.off('.contextMenu .contextMenuAutoHide');
@@ -133,17 +171,38 @@ var Chart = Backbone.View.extend({
         $target.contextMenu();
     },
 
+    properties_button: function(event) {
+        var self = this;
+        var $target = $(event.target).hasClass('button') ? $(event.target) : $(event.target).parent();
+
+        var self = this;
+        var $body = $(document);
+        //$body.off('.contextMenu .contextMenuAutoHide');
+        //$('.context-menu-list').remove();
+        $target.html("hello");
+    },
     receive_data: function(args) {
         if (! $(this.workspace.querytoolbar.el).find('.render_chart').hasClass('on')) {
             return;
         }
         this.workspace.adjust();
         this.renderer.process_data_tree(args, true, true);
-        this.renderer.switch_chart(this.renderer.type);
+        var p = this.workspace.query.getProperty("saiku.ui.chart.options");
+        this.renderer.switch_chart(this.renderer.type, p);
         //_.delay(this.renderer.process_data_tree, 0, args, true, true);
 
-
+        if (Settings.MAPS && Settings.MAPS_TYPE === 'OSM' && this.workspace.query.getProperty('saiku.ui.render.mode') === 'map') {
+            var mapProperties = this.workspace.query.getProperty('saiku.ui.map.options');
+            var mapType = this.workspace.query.getProperty('saiku.ui.render.type');
+            var saikuMapRenderer = new SaikuMapRenderer(this, mapType, mapProperties);
+            _.defer(function() {
+                saikuMapRenderer.renderMap();
+            });
+        }
     }
 });
 
-
+// Not remove. Temporary style code. Migrate to styles.css in Saiku version 4.0.
+Saiku.loadCSS('js/saiku/plugins/CCC_Chart/chart_editor.css');
+Saiku.loadCSS('js/saiku/plugins/CCC_Chart/map_editor.css');
+//@ sourceURL=filename.js

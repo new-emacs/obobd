@@ -3,11 +3,11 @@
     <parent>
         <artifactId>saiku-core</artifactId>
         <groupId>org.saiku</groupId>
-        <version>3.4.2</version>
+        <version>3.5</version>
     </parent>
 	<artifactId>saiku-olap-util</artifactId>
 	<packaging>jar</packaging>
-	<version>3.4.2</version>
+	<version>3.5</version>
 	<name>saiku olap util</name>
 	<properties>
 		<maven.compiler.source>1.5</maven.compiler.source>
@@ -66,7 +66,7 @@
 			<groupId>pentaho</groupId>
 			<artifactId>mondrian</artifactId>
 			<version>4.3.0.1-130</version>
-		</dependency>
+	</dependency>
 		<dependency>
 			<groupId>eigenbase</groupId>
 			<artifactId>eigenbase-properties</artifactId>
@@ -92,11 +92,7 @@
 			<artifactId>olap4j-xmla</artifactId>
 			<version>1.2.0</version>
         </dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

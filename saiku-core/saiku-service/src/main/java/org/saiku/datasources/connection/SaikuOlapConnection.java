@@ -108,6 +108,7 @@ public class SaikuOlapConnection implements ISaikuConnection {
           }
 
           Class.forName(driver);
+            System.out.println("sone: url ==="+url);
           Connection connection = DriverManager.getConnection(url, username, password);
 
           if (connection != null) {

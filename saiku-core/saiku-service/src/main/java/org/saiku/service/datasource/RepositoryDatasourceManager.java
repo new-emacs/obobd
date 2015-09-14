@@ -61,6 +61,7 @@ public class RepositoryDatasourceManager implements IDatasourceManager {
         try {
             irm.start(userService);
         } catch (RepositoryException e) {
+            e.printStackTrace();
             log.error("Could not start repo", e);
         }
         datasources.clear();

@@ -256,6 +256,7 @@ public class AdminResource {
             datasourceService.addSchema(schema, path, name);
             return Response.ok().entity(datasourceService.getAvailableSchema()).build();
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Error uploading schema: "+name, e);
             return Response.serverError().status(Response.Status.INTERNAL_SERVER_ERROR)
                            .entity(e.getLocalizedMessage())
