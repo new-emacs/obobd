@@ -220,25 +220,28 @@ function removeUnusedIcon(){
  */
 Saiku.events.bind('session:new', function() {
 
-	  // loadCSS('js/saiku/plugins/Obobd/css/plugin.css');	
-	  // loadJS('js/saiku/plugins/Obobd/js/lib.js');
+    // loadCSS('js/saiku/plugins/Obobd/css/plugin.css');	
+    // loadJS('js/saiku/plugins/Obobd/js/lib.js');
 
     removeUnusedIcon();
-    Saiku.toolbar.new_query();
-	  function new_workspace(args) {
-		    if (typeof args.workspace.obobd === 'undefined') {
-			      args.workspace.obobd = new Obobd({ workspace: args.workspace });
-		    }
-	  }
+    function new_workspace(args) {
+        if (typeof args.workspace.obobd === 'undefined') {
+            args.workspace.obobd = new Obobd({ workspace: args.workspace });
+        }
+    }
+    // Add new tab content
+    if(Saiku.tabs._tabs.length==0){
+        Saiku.tabs.add(new Workspace());
 
-	  // Add new tab content
-	  for (var i = 0, len = Saiku.tabs._tabs.length; i < len; i += 1) {
-		    var tab = Saiku.tabs._tabs[i];
-		    new_workspace({
-			      workspace: tab.content
-		    });
-	  }
+    } else{
+        for (var i = 0, len = Saiku.tabs._tabs.length; i < len; i += 1) {
+            var tab = Saiku.tabs._tabs[i];
+            new_workspace({
+                workspace: tab.content
+            });
+        }
+    }
 
-	  // New workspace
-	  Saiku.session.bind('workspace:new', new_workspace);
+    // New workspace
+    Saiku.session.bind('workspace:new', new_workspace);
 });
