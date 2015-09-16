@@ -16,8 +16,8 @@ eom
 }
 
 function start_ui(){
-    kill -9 `lsof -i:9988 | awk '{print $2}'`
-    kill -9 `lsof -i:35729 | awk '{print $2}'`
+    kill -9 `lsof -i:9988 | grep node | awk '{print $2}'`
+    kill -9 `lsof -i:35729 | grep grunt | awk '{print $2}'`
     cd saiku-ui
     npm run start2 &
     grunt &
