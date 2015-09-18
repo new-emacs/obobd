@@ -14,14 +14,9 @@
         <tag>saiku-3.1-SNAPSHOT</tag>
     </scm>
     <modules>
-        <module>saiku-core</module>
         <module>saiku-ui</module>
-        <module>saiku-webapp</module>
-        <module>saiku-server</module>
-       <!-- <module>saiku-bi-platform-plugin-p5</module> -->
-<!--        <module>saiku-web-tests</module>-->
-    <module>obobd-web</module>
-  </modules>
+        <module>obobd-web</module>
+    </modules>
 
     <distributionManagement>
         <repository>
