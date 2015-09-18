@@ -42,16 +42,14 @@ case $1 in
         tail -f tomcat/logs/catalina.out &
         tail -f tomcat/logs/saiku.log &
         ;;
-    "jetty")
-        cd saiku-ui
-        npm run start2 &
-        cd -
+    jetty | dev)
+       start_ui
         cd saiku-core
-        mvn clean install -DskipTests=true -e -o
+        mvn -o clean install -DskipTests=true -e -o
         cd -
         cd ui-webapp
-        mvn install
-        mvn  jetty:run-exploded
+        mvn -o install
+        mvn -o jetty:run-exploded
         ;;
     "ui")
        start_ui
