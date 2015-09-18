@@ -9,47 +9,33 @@ eom
 
 function usageRun() {
     cat <<eom
-Usage: saiku tom | jetty
-tom: 原始方式启动
+Usage: saiku build | dev
+
 jetty: 简洁方式启动
 eom
 }
 
-
+function start_ui(){
+    kill -9 `lsof -i:9988 | grep node | awk '{print $2}'`
+    kill -9 `lsof -i:35729 | grep grunt | awk '{print $2}'`
+    cd saiku-ui
+    npm run start2 &
+    grunt &
+    cd -
+}
 case $1 in
     "build")
         mvn clean install -DskipTests=true
         ;;
-    "tom")
-        mvn clean install -DskipTests=true -e -o
-        echo ""
-        echo "Running Server....."
-        cd saiku-ui
-        kill -9 `lsof -i:9999 | awk '{print $2}'`
-        npm start &
 
-        cd -
-        cd saiku-server/target/dist/saiku-server/
-        kill -9 `lsof -i:8080 | awk '{print $2}'`
-        sh start-saiku.sh
-        tail -f tomcat/logs/catalina.out &
-        tail -f tomcat/logs/saiku.log &
-        ;;
-    "jetty")
-        cd saiku-ui
-        npm run start2 &
-        cd -
-        cd saiku-core
-        mvn clean install -DskipTests=true -e -o
-        cd -
-        cd ui-webapp
-        mvn install
-        mvn  jetty:run-exploded
+     dev)
+       start_ui
+          cd obobd-web
+        mvn -o clean install -DskipTests=true -e -o
+        mvn -o jetty:run-exploded
         ;;
     "ui")
-        cd saiku-ui
-        npm run start2 &
-        grunt &
+       start_ui
         ;;
     *)
         echo "-----------------------------------------------------"
