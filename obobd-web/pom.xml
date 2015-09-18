@@ -8,10 +8,10 @@
     <version>3.5</version>
   </parent>
   <groupId>com.github.bisone</groupId>
-  <artifactId>ui-webapp</artifactId>
+  <artifactId>obobd-web</artifactId>
   <version>3.5</version>
   <packaging>war</packaging>
-  <name>ui-webapp Maven Webapp</name>
+  <name>obobd-web Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <properties>
     <maven.surefire.plugin.version>2.17</maven.surefire.plugin.version>
@@ -136,7 +136,7 @@
     
   </dependencies>
   <build>
-    <finalName>ui-webapp</finalName>
+    <finalName>obobd-web</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
  
@@ -266,7 +266,7 @@
                   <goal>copy-resources</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>${basedir}/target/ui-webapp/WEB-INF</outputDirectory>
+                  <outputDirectory>${basedir}/target/obobd-web/WEB-INF</outputDirectory>
                   <resources>
                     <resource>
                       <directory>src/main/webapp/WEB-INF</directory>

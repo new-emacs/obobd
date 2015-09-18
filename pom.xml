@@ -20,7 +20,7 @@
         <module>saiku-server</module>
        <!-- <module>saiku-bi-platform-plugin-p5</module> -->
 <!--        <module>saiku-web-tests</module>-->
-    <module>ui-webapp</module>
+    <module>obobd-web</module>
   </modules>
 
     <distributionManagement>
