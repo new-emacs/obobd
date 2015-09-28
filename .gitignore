@@ -35,3 +35,4 @@ obobd-web/logs/
 **/target/
 obobd-web/target/
 target
+obobd-web/repository
