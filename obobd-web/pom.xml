@@ -232,7 +232,7 @@
         <repoconfig>configuration-mysql.xml</repoconfig>
 
         <!-- <repoconfig>/home/will/backup/repository/configuration.xml</repoconfig> -->
-        <repodata>/home/will/backup/repository/data</repodata>
+        <repodata>repository/data</repodata>
         <foodmartrepo>/home/will/backup/data</foodmartrepo>
         <foodmartschema>/home/will/backup/data/FoodMart4.xml</foodmartschema>
         <foodmarturl>jdbc:mysql://mysql.test.local:3358/jackrabbit?characterEncoding=UTF-8</foodmarturl>
