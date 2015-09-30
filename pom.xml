@@ -136,11 +136,7 @@
                     <skipStaging>true</skipStaging>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>2.11</version>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
@@ -301,6 +297,12 @@
                 <groupId>org.jasig.cas.client</groupId>
                 <artifactId>cas-client-integration-tomcat-v7</artifactId>
                 <version>3.3.2</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.eclipse.jetty</groupId>
+              <artifactId>jetty-maven-plugin</artifactId>
+              <version>9.3.4.RC0</version>
             </dependency>
             <dependency>
                 <groupId>org.mozilla</groupId>

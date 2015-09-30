@@ -45,11 +45,11 @@ case $1 in
     jetty | dev)
        start_ui
         cd saiku-core
-        mvn -o clean install -DskipTests=true -e -o
+        mvn  clean install -DskipTests=true -e 
         cd -
         cd obobd-web
-        mvn -o install
-        mvn -o jetty:run-exploded
+        mvn  clean install -e
+        mvn -e jetty:run-exploded
         ;;
     "ui")
        start_ui
