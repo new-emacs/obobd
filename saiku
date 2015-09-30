@@ -43,13 +43,13 @@ case $1 in
         tail -f tomcat/logs/saiku.log &
         ;;
     jetty | dev)
-       start_ui
+        start_ui
         cd saiku-core
-        mvn -o clean install -DskipTests=true -e -o
+        mvn  clean install -DskipTests=true -e 
         cd -
         cd obobd-web
-        mvn -o install
-        mvn -o jetty:run-exploded
+        mvn  install
+        mvn  jetty:run-exploded
         ;;
     "ui")
        start_ui
