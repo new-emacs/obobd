@@ -48,8 +48,8 @@ case $1 in
         mvn  clean install -DskipTests=true -e 
         cd -
         cd obobd-web
-        mvn  install
-        mvn  jetty:run-exploded
+        mvn  clean install -e
+        mvn -e jetty:run-exploded
         ;;
     "ui")
        start_ui
@@ -63,6 +63,5 @@ case $1 in
         usageRun
         exit 1
         ;;
-
 esac
 

@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
-
 import javax.jcr.*;
 import javax.jcr.nodetype.NodeTypeExistsException;
 import javax.jcr.nodetype.NodeTypeManager;
@@ -50,7 +49,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 /**
  * JackRabbit JCR Repository Manager for Saiku.
  */
@@ -144,7 +142,7 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
     }
   }
 
-  public boolean start(UserService userService) throws RepositoryException {
+ public boolean start(UserService userService) throws RepositoryException {
     this.userService = userService;
     if (session == null) {
       log.info("starting repo");
@@ -164,7 +162,7 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
         } catch (IOException e) {
           log.error("Jackrabbit配置信息读取错误", e);
         }
-      repository = RepositoryImpl.create(config);
+     repository = RepositoryImpl.create(config);
 
       log.info("repo started");
       log.info("logging in");
@@ -184,7 +182,7 @@ public class JackRabbitRepositoryManager implements IRepositoryManager {
 
       }catch (Exception ex){
         log.error("连接Jackrabbit异常",ex);
-      }
+     }
       session = js;
       root = session.getRootNode();
 
@@ -1095,7 +1093,7 @@ System.out.println(e.getLocalizedMessage());
             repoObjects
                 .add(new RepositoryFileObject(filename, "#" + files.getPath(), extension, files.getPath(),
                         acls));
-          }
+         }
           if (files.getPrimaryNodeType().getName().equals("nt:folder")) {
             List<AclMethod> acls = acl2.getMethods(files, username, roles);
 
@@ -1174,7 +1172,7 @@ System.out.println(e.getLocalizedMessage());
                   repoObjects
                       .add(new RepositoryFileObject(filename, "#" + relativePath, extension, relativePath,
                               acls));
-                }
+               }
                 if (file.getPrimaryNodeType().getName().equals("nt:folder")) {
                   //repoObjects.add(new RepositoryFolderObject(filename, "#" + relativePath, relativePath, acls, getRepoObjects(file, fileType, username, roles)));
                 }
