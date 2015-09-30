@@ -46,10 +46,10 @@
             </plugin>
 
 
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.mortbay.jetty</groupId>-->
+                <!--<artifactId>maven-jetty-plugin</artifactId>-->
+            <!--</plugin>-->
             <!--<plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -261,12 +261,7 @@
             <artifactId>cas-client-core</artifactId>
             <version>3.3.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${spring.security.version}</version>
- 
-        </dependency>
+
 
     </dependencies>
     <reporting>
