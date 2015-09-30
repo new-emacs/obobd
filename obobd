@@ -31,8 +31,8 @@ case $1 in
      dev)
        start_ui
           cd obobd-web
-        mvn -o clean install -DskipTests=true -e -o
-        mvn -o jetty:run-exploded
+        mvn clean install -DskipTests=true -e
+        mvn -e jetty:run-exploded
         ;;
     "ui")
        start_ui
