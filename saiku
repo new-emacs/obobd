@@ -63,6 +63,5 @@ case $1 in
         usageRun
         exit 1
         ;;
-
 esac
 

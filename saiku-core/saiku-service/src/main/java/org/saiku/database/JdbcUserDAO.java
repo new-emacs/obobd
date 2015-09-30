@@ -34,7 +34,7 @@ public class JdbcUserDAO
         if(stream == null){
             stream = loader.getResourceAsStream("database-queries.properties");
         }
-        try {
+       try {
             prop.load(stream);
         } catch (IOException e) {
             e.printStackTrace();

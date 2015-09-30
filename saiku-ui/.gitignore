@@ -95,7 +95,10 @@ build/Release
 # Commenting this out is preferred by some people, see
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
 node_modules
+<<<<<<< HEAD
 node_modeules2
+=======
+>>>>>>> 94524888cf2f2d63941dcea5ec8995986395cbb4
 
 # Users Environment Variables
 .lock-wscript
@@ -393,4 +396,8 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 # Grunt Dist directory
+<<<<<<< HEAD
 dist/
+=======
+dist/
+>>>>>>> 94524888cf2f2d63941dcea5ec8995986395cbb4
