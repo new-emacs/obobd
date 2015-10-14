@@ -136,6 +136,18 @@
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-jcr-servlet</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-redis</artifactId>
+      <version>1.6.0.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.2.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
     
   </dependencies>
   <build>
@@ -243,6 +255,8 @@
         <earthquakeschema>/home/will/backup/data/Earthquakes.xml</earthquakeschema>
         <earthquakeurl>jdbc:mysql://mysql.test.local:3358/jackrabbit?characterEncoding=UTF-8</earthquakeurl>
         <pluginpath>../saiku-ui/js/saiku/plugins/</pluginpath>
+
+        <redis.host-name>redis.local</redis.host-name>
 
         
       </properties>
