@@ -40,6 +40,7 @@
        - [[#cube][CUBE]]
        - [[#权限][权限]]
        - [[#编写-mondrian-40-schema][编写 mondrian 4.0 Schema]]
+   - [[#汇总表][汇总表]]
  - [[#saiku][Saiku]]
    - [[#saiku介绍][Saiku介绍]]
      - [[#saiku用户手册][Saiku用户手册]]
@@ -413,10 +414,11 @@ WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
 
 * MONDRIAN 介绍
    - [[HTTP://BLOG.CSDN.NET/LONGSHENLMJ/ARTICLE/DETAILS/18733341][ MONDRIAN SCHEMA WORKBENCH工作界面]]
-   - HTTP://BLOG.CSDN.NET/LONGSHENLMJ/ARTICLE/CATEGORY/1850253
-   - 退化维：HTTP://MONDRIAN.PENTAHO.COM/DOCUMENTATION/SCHEMA.PHP#DEGENERATE_DIMENSIONS
-   - 聚合表：HTTP://MONDRIAN.PENTAHO.COM/DOCUMENTATION/AGGREGATE_TABLES.PHP
+   - http://blog.csdn.net/longshenlmj/article/category/1850253
+   - 退化维：http://mondrian.pentaho.com/documentation/schema.php#degenerate_dimensions
+   - 聚合表：http://mondrian.pentaho.com/documentation/aggregate_tables.php
    - 使用手册 http://wiki.meteorite.bi/display/SAIK/Using+Saiku
+   - http://mondrian.pentaho.com/head/documentation/schema.php#XML_Schema
 
 
    MONDRIAN是一个BI开源项目。一个用JAVA写成的OLAP（在线分析性处理）引擎。它用MDX语言实现查询，从关系数据库(RDBMS)中读取数据。然后经过JAVA API用多维的方式对结果进行展示。
@@ -792,6 +794,20 @@ FROM sales.customer
 WHERE country = 'Canada'
 </SQL>
 </Query>
+#+end_src
+
+
+** 汇总表
+- 聚合表：http://mondrian.pentaho.com/documentation/aggregate_tables.php
+
+需要修改mondrian.properties文件 
+
+#+begin_src 
+mondrian.rolap.aggregates.Use=true
+
+mondrian.rolap.aggregates.Read=true
+
+
 #+end_src
 
 * Saiku
