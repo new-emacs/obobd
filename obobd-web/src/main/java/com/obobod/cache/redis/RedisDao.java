@@ -4,6 +4,8 @@ package com.obobod.cache.redis;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 
+import java.util.Set;
+
 
 /**
  * @author litao
@@ -63,6 +65,8 @@ public class RedisDao {
         }
     }
 
+
+
     public Long remove(byte[] key) throws Exception {
         return this.jedis.del(key);
     }
@@ -97,5 +101,7 @@ public class RedisDao {
     }
 
 
-
+    public Set<String> keySet() {
+        return this.jedis.keys("*");
+    }
 }

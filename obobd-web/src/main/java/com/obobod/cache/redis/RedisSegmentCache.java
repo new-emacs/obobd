@@ -6,8 +6,7 @@ import mondrian.spi.SegmentCache;
 import mondrian.spi.SegmentHeader;
 import org.apache.log4j.Logger;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -17,13 +16,16 @@ public class RedisSegmentCache implements SegmentCache {
     private final List<SegmentCacheListener> listeners =
             new CopyOnWriteArrayList<SegmentCacheListener>();
 
+    private static final RedisDao getCache() {
+        return new RedisDao();
+    }
+
     public SegmentBody get(SegmentHeader header) {
-        RedisDao map = getRedisDao();
 
         if (header == null)
             return null;
 
-        final byte[] ref = map.get(Md5Utils.md5sum(header.toString()));
+        final byte[] ref = getCache().get(getHeaderKey(header));
         final SegmentBody body = (SegmentBody) SerializeUtil.unserialize(ref);
         if (body == null) {
             return null;
@@ -44,8 +46,8 @@ public class RedisSegmentCache implements SegmentCache {
     public boolean contains(SegmentHeader header) {
         if (header == null)
             return false;
-        RedisDao map = getRedisDao();
-        final byte[] ref = map.get(Md5Utils.md5sum(header.toString()));
+
+        final byte[] ref = getCache().get(getHeaderKey(header));
         if (ref == null) {
             return false;
         }
@@ -62,21 +64,33 @@ public class RedisSegmentCache implements SegmentCache {
         return true;
     }
 
-    private RedisDao getRedisDao() {
-        return new RedisDao();
-    }
-
+    @Override
     public List<SegmentHeader> getSegmentHeaders() {
-        return null;
+        try {
+
+            List<SegmentHeader> retList = new ArrayList<SegmentHeader>(  );
+
+            for(Iterator<String> i= getCache().keySet().iterator();i.hasNext();){
+                retList.add((SegmentHeader)SerializeUtil.unserialize(i.next().getBytes()));
+            }
+
+            return retList;
+
+
+        } catch ( Exception e ) {
+            log.error( e );
+            return Collections.emptyList();
+        }
+
+
     }
 
     public boolean put(final SegmentHeader header, SegmentBody body) {
         assert header != null;
         assert body != null;
 
-        RedisDao map = getRedisDao();
         try {
-            map.put(Md5Utils.md5sum(header.toString()), SerializeUtil.serialize(body));
+            getCache().put(getHeaderKey(header), SerializeUtil.serialize(body));
         } catch (Exception e) {
             log.error("SegmentBody put error：" + e.getMessage());
         }
@@ -102,10 +116,10 @@ public class RedisSegmentCache implements SegmentCache {
     public boolean remove(final SegmentHeader header) {
         if (header == null)
             return false;
-        RedisDao map = getRedisDao();
+
         boolean result = false;
         try {
-            result = map.remove(Md5Utils.md5sum(header.toString())) != null;
+            result = getCache().remove(getHeaderKey(header)) != null;
 
 //	        if (result) {
             fireSegmentCacheEvent(
@@ -132,9 +146,14 @@ public class RedisSegmentCache implements SegmentCache {
         return result;
     }
 
+    private byte[] getHeaderKey(SegmentHeader header) {
+        header.getDescription();
+        return SerializeUtil.serialize(header);
+    }
+
     public void tearDown() {
-        RedisDao map = getRedisDao();
-        map.clear();
+
+        getCache().clear();
         listeners.clear();
         log.info("RedisSegmentCache execute tearDown sucess!");
     }
