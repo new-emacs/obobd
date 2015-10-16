@@ -6,12 +6,6 @@ import redis.clients.jedis.Jedis;
 
 import java.util.Set;
 
-
-/**
- * @author litao
- * modified by songteng @2015-09-28
- */
-
 public class RedisDao {
 
     private static final Logger log = Logger.getLogger(RedisDao.class);
@@ -21,15 +15,7 @@ public class RedisDao {
 
     Jedis jedis = new Jedis("redis.local");
 
-    /**
-     * 根据key获取valueString
-     *
-     * @param key
-     * @return String
-     * @method: RedisDao getValueByKey
-     * @create date： 2014年8月27日
-     * @2014, by chendongwei.
-     */
+
     public String getValueByKey(String key) {
 
         String value = null;
@@ -79,16 +65,7 @@ public class RedisDao {
 
 
 
-    /**
-     * reids存储key， value
-     *
-     * @param key
-     * @param value
-     * @throws Exception void
-     * @method: RedisDao setKeyValue
-     * @create date： 2014年8月27日
-     * @2014, by chendongwei.
-     */
+
     public void setKeyValue(String key, String value) throws Exception {
 
         try {

@@ -74,6 +74,7 @@ public class RedisSegmentCache implements SegmentCache {
                 retList.add((SegmentHeader)SerializeUtil.unserialize(i.next().getBytes()));
             }
 
+            log.info("获得Segement headers"+ retList.size());
             return retList;
 
 

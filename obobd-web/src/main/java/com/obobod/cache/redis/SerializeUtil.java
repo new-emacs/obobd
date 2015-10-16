@@ -9,56 +9,56 @@ import java.io.ObjectOutputStream;
 
 
 public class SerializeUtil {
-	private static final Logger log = Logger.getLogger(SerializeUtil.class);
+    private static final Logger log = Logger.getLogger(SerializeUtil.class);
 
-	public static byte[] serialize(Object object) {
+    public static byte[] serialize(Object object) {
 
-		ObjectOutputStream oos = null;
+        ObjectOutputStream oos = null;
 
-		ByteArrayOutputStream baos = null;
+        ByteArrayOutputStream baos = null;
 
-		try {
+        try {
 
-			// 序列化
+            // 序列化
 
-			baos = new ByteArrayOutputStream();
+            baos = new ByteArrayOutputStream();
 
-			oos = new ObjectOutputStream(baos);
+            oos = new ObjectOutputStream(baos);
 
-			oos.writeObject(object);
+            oos.writeObject(object);
 
-			byte[] bytes = baos.toByteArray();
+            byte[] bytes = baos.toByteArray();
 
-			return bytes;
+            return bytes;
 
-		} catch (Exception e) {
-			log.error("serialize error："+e.getMessage());
-		}
+        } catch (Exception e) {
+            log.error("serialize error：" + e.getMessage());
+        }
 
-		return null;
+        return null;
 
-	}
+    }
 
-	public static Object unserialize(byte[] bytes) {
+    public static Object unserialize(byte[] bytes) {
 
-		ByteArrayInputStream bais = null;
+        ByteArrayInputStream bais = null;
 
-		try {
+        try {
 
-			// 反序列化
+            // 反序列化
 
-			bais = new ByteArrayInputStream(bytes);
+            bais = new ByteArrayInputStream(bytes);
 
-			ObjectInputStream ois = new ObjectInputStream(bais);
+            ObjectInputStream ois = new ObjectInputStream(bais);
 
-			return ois.readObject();
+            return ois.readObject();
 
-		} catch (Exception e) {
-			log.error("unserialize error："+e.getMessage());
-		}
+        } catch (Exception e) {
+            log.error("unserialize error：" + e.getMessage());
+        }
 
-		return null;
+        return null;
 
-	}
+    }
 
 }
