@@ -40,6 +40,10 @@
        - [[#cube][CUBE]]
        - [[#权限][权限]]
        - [[#编写-mondrian-40-schema][编写 mondrian 4.0 Schema]]
+   - [[#聚合表][聚合表]]
+     - [[#修改mondrianproperties][修改mondrian.properties]]
+     - [[#创建汇总表-][创建汇总表 ]]
+     - [[#修改shcema-文件][修改shcema 文件]]
  - [[#saiku][Saiku]]
    - [[#saiku介绍][Saiku介绍]]
      - [[#saiku用户手册][Saiku用户手册]]
@@ -793,6 +797,105 @@ WHERE country = 'Canada'
 </SQL>
 </Query>
 #+end_src
+
+** 聚合表
+
+- 聚合表：http://mondrian.pentaho.com/documentation/aggregate_tables.php
+- 
+
+下面是mondrian 3.6的例子。
+*** 修改mondrian.properties
+
+#+begin_src 
+
+mondrian.rolap.aggregates.Use=true
+mondrian.rolap.aggregates.Read=true
+
+#+end_src
+*** 创建汇总表 
+[2015-10-21 三 14:39]
+
+#+begin_src 
+
+CREATE TABLE `fact_financial_monitor` (
+	 `id` 	                		 integer 	 NOT NULL AUTO_INCREMENT     comment  "主键",
+	 `data_date`             		 int  DEFAULT 0          comment  "数据日期",
+   item_sku_id           			 BIGINT DEFAULT 0 comment 'sku编码',
+   valid_order_qtty           int DEFAULT 0 comment    '收订订单数量',
+  PRIMARY KEY (`id`)
+);
+
+
+CREATE TABLE agg_l_05_fact_financial_monitor(
+	 `id` 	                		 integer 	 NOT NULL AUTO_INCREMENT     comment  "主键",
+   dim_year                    INT NOT NULL comment "年",
+   dim_month                   INT NOT NULL comment "月",
+  item_sku_id           			 BIGINT DEFAULT 0 comment 'sku编码',
+  valid_order_qtty           int DEFAULT 0 comment    '收订订单数量',
+  fact_count                 INTEGER NOT NULL,
+   PRIMARY KEY (`id`)
+);
+
+INSERT INTO agg_l_05_fact_financial_monitor (
+    dim_year                , 
+    dim_month               , 
+   item_sku_id            , 
+   valid_order_qtty       , 
+   fact_count              
+)
+SELECT
+    dim_year                ,
+    dim_month               , 
+   item_sku_id            , 
+   SUM(valid_order_qtty) AS valid_order_qtty       , 
+   COUNT(*) AS fact_count
+FROM
+    fact_financial_monitor AS BASE,
+    dim_time_v2 AS DIM
+WHERE
+    BASE.data_date=DIM.dim_date
+GROUP BY
+    dim_year                ,
+    dim_month               , 
+   item_sku_id             
+;
+
+
+
+#+end_src
+
+
+*** 修改shcema 文件
+
+
+#+begin_src 
+<Table name="fact_financial_monitor">
+    <AggName name="agg_l_05_fact_financial_monitor" ignorecase="true">
+        <AggFactCount column="FACT_COUNT">
+        </AggFactCount>
+        <AggForeignKey factColumn="item_sku_id" aggColumn="item_sku_id">
+        </AggForeignKey>
+        <AggMeasure column="valid_order_qtty" name="[Measures].[收订订单数量]">
+        </AggMeasure>
+        <AggLevel column="dim_year" name="[时间.年月].[年]" collapsed="true">
+        </AggLevel>
+        <AggLevel column="dim_month" name="[时间.年月].[月]" collapsed="true">
+        </AggLevel>
+    </AggName>
+</Table>
+
+#+end_src
+
+
+如何编写AggLevel可以参考log里的MDX语句
+
+#+begin_src 
+SELECT
+NON EMPTY {Hierarchize({[Measures].[收订订单数量]})} ON COLUMNS,
+NON EMPTY {Hierarchize({{[时间.年月].[年].Members}, {[时间.年月].[月].Members}})} ON ROWS
+FROM [FinancialMonitor]
+
+#+end_src 
 
 * Saiku
 
