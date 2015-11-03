@@ -65,6 +65,7 @@
        - [[#相关代码][相关代码]]
    - [[#单点登录][单点登录]]
      - [[#基本思路][基本思路]]
+   - [[#角色管理-][角色管理 ]]
  - [[#引入-redis-缓存][引入 redis 缓存]]
    - [[#下面是两个缓存的例子，分别用内存和cdc作为缓存][下面是两个缓存的例子，分别用内存和cdc作为缓存]]
    - [[#实现mondrian-缓存的步骤如下：][实现mondrian 缓存的步骤如下：]]
@@ -1057,7 +1058,6 @@ FROM [FinancialMonitor]
 
   - [[https://github.com/standino/saiku-ui/blob/master/embed/index.js][index.js]]
   - [[https://github.com/standino/saiku-ui/blob/master/js/saiku/embed/SaikuEmbed.js][SaikuEmbed.js]]
-
 ** 单点登录
 
 *** 基本思路
@@ -1065,6 +1065,22 @@ FROM [FinancialMonitor]
 公司已经有了SSO 单点登陆方案。登陆成功后，浏览器中会有加密过的cookie信息。Saiku的安全机制是基于Spring security的。在Spring security中有Pre-Authentication机制。
 我们要做的就是实现Pre-Authentication，通过读取公司SSO系统中的cookie信息获得登陆人，并且编写角色赋权的逻辑，然后传给spring security。这样saiku系统就会使用我们传给它的
 角色来确定显示哪些cube。
+
+** 角色管理 
+[2015-10-22 四 12:37]
+
+ 获得所有用户信息 /saiku/rest/saiku/admin/users
+#+begin_src 
+
+[
+{"username":"admin","email":"test@admin.com","password":"admin","roles":["ROLE_USER","ROLE_ADMIN"],"id":1},
+{"username":"smith","email":null,"password":"smith","roles":null,"id":4}
+]
+
+#+end_src
+
+根据ID获得用户信息/saiku/rest/saiku/admin/users/5
+
 
 * 引入 redis 缓存
 
