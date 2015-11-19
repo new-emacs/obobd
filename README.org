@@ -422,6 +422,8 @@ WHERE([PRODUCT].[PRODUCT CATEGORIES].BIKES)
    - 退化维：http://mondrian.pentaho.com/documentation/schema.php#degenerate_dimensions
    - 聚合表：http://mondrian.pentaho.com/documentation/aggregate_tables.php
    - 使用手册 http://wiki.meteorite.bi/display/SAIK/Using+Saiku
+   - Mondrian 4.0 文档 http://mondrian.pentaho.com/head/documentation/schema.php
+
 
 
    MONDRIAN是一个BI开源项目。一个用JAVA写成的OLAP（在线分析性处理）引擎。它用MDX语言实现查询，从关系数据库(RDBMS)中读取数据。然后经过JAVA API用多维的方式对结果进行展示。
