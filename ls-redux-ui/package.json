@@ -1,7 +1,7 @@
 {
   "name": "ls-redux-ui",
-  "version": "3.0.5",
-  "description": "Predictable state container for JavaScript apps",
+  "version": "3.0.7",
+  "description": "UI base on redux and react",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
   "files": [
@@ -94,6 +94,11 @@
     "es6-promise": "^3.0.2",
     "free-jqgrid": "^4.11.1",
     "jquery-bootstrap-theme": "^1.0.0",
-    "react-bootstrap": "^0.28.1"
+    "underscore": "^1.8.3"
+  },
+  "peerDependencies": {
+    "jquery": ">=1.11.3",
+    "react": ">=0.14.0",
+    "react-dom": ">=0.14.0"
   }
 }

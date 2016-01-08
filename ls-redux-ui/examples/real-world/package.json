@@ -19,9 +19,8 @@
     "humps": "^0.6.0",
     "isomorphic-fetch": "^2.1.1",
     "lodash": "^3.10.1",
+    "ls-redux-ui": "^3.0.7",
     "normalizr": "^1.0.0",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
     "react-redux": "^2.1.2",
     "react-router": "^1.0.0-rc1",
     "redux": "^3.0.0",
@@ -34,6 +33,7 @@
     "babel-loader": "^5.1.4",
     "babel-plugin-react-transform": "^1.1.0",
     "concurrently": "^0.1.1",
+    "es6-promise": "^3.0.2",
     "express": "^4.13.3",
     "react-transform-hmr": "^1.0.0",
     "redux-devtools": "^3.0.0",
@@ -42,5 +42,10 @@
     "webpack": "^1.9.11",
     "webpack-dev-middleware": "^1.2.0",
     "webpack-hot-middleware": "^2.2.0"
+  },
+  "peerDependencies": {
+    "jquery": ">=1.11.3",
+    "react": ">=0.14.0",
+    "react-dom": ">=0.14.0"
   }
 }

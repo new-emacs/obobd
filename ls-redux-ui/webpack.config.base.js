@@ -1,6 +1,6 @@
 'use strict';
 require('es6-promise').polyfill();
-
+var webpack = require('webpack');
 module.exports = {
   module: {
     loaders: [
@@ -30,6 +30,16 @@ module.exports = {
     library: 'ls-redux-ui',
     libraryTarget: 'umd'
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery",
+      "root.jQuery": "jquery",
+      _:"underscore"
+    })//使jquery变成全局变量，不用在自己文件require('jquery')了
+
+  ],
   resolve: {
       extensions: ['', '.js','.jsx']
   }
