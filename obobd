@@ -23,6 +23,16 @@ function start_ui(){
     grunt &
     cd -
 }
+
+
+function start_example(){
+    kill -9 `lsof -i:3000 | grep node | awk '{print $2}'`
+   # kill -9 `lsof -i:35729 | grep grunt | awk '{print $2}'`
+    cd ls-redux-ui/examples/real-world
+    npm start &
+    cd -
+}
+
 case $1 in
     "build")
         mvn clean install -DskipTests=true
@@ -36,6 +46,9 @@ case $1 in
         ;;
     "ui")
        start_ui
+        ;;
+    demo)
+        start_example
         ;;
     *)
         echo "-----------------------------------------------------"
